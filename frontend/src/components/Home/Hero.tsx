@@ -69,6 +69,10 @@ interface HeroProps {
 export const Hero: React.FC<HeroProps> = ({ onOpenQuoteModal, onOpenTrackingModal }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const copyRef = useRef<HTMLDivElement>(null);
+  const kickerRef = useRef<HTMLParagraphElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+  const descriptionRef = useRef<HTMLParagraphElement>(null);
+  const actionsRef = useRef<HTMLDivElement>(null);
   const [segment, setSegment] = useState(0);
 
   useEffect(() => {
@@ -97,6 +101,72 @@ export const Hero: React.FC<HeroProps> = ({ onOpenQuoteModal, onOpenTrackingModa
 
     return () => window.cancelAnimationFrame(frame);
   }, []);
+
+  // Entrance animation for the hero copy
+  useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) return;
+
+    const targets = [kickerRef.current, headlineRef.current, descriptionRef.current, actionsRef.current];
+    const buttons = actionsRef.current ? Array.from(actionsRef.current.children) : [];
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ delay: 0.25 });
+
+      tl.fromTo(
+        kickerRef.current,
+        { autoAlpha: 0, y: 18, letterSpacing: '0.6em' },
+        { autoAlpha: 1, y: 0, letterSpacing: '0.25em', duration: 0.9, ease: 'power3.out' },
+      )
+        .fromTo(
+          headlineRef.current,
+          { autoAlpha: 0, y: 46, rotationX: -14, transformPerspective: 900 },
+          { autoAlpha: 1, y: 0, rotationX: 0, duration: 1.1, ease: 'power4.out' },
+          '-=0.55',
+        )
+        .fromTo(
+          descriptionRef.current,
+          { autoAlpha: 0, y: 26 },
+          { autoAlpha: 1, y: 0, duration: 0.9, ease: 'power3.out' },
+          '-=0.75',
+        )
+        .fromTo(
+          buttons,
+          { autoAlpha: 0, y: 22, scale: 0.96 },
+          { autoAlpha: 1, y: 0, scale: 1, duration: 0.7, ease: 'back.out(1.6)', stagger: 0.12 },
+          '-=0.6',
+        );
+    });
+
+    return () => {
+      ctx.revert();
+      targets.forEach(target => target && gsap.set(target, { clearProps: 'all' }));
+    };
+  }, []);
+
+  // Every time the video moves to the next service, the copy replays its entrance
+  useEffect(() => {
+    if (segment === 0) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const ctx = gsap.context(() => {
+      gsap
+        .timeline()
+        .fromTo(
+          headlineRef.current,
+          { autoAlpha: 0, y: 40, rotationX: -12, transformPerspective: 900 },
+          { autoAlpha: 1, y: 0, rotationX: 0, duration: 0.95, ease: 'power4.out' },
+        )
+        .fromTo(
+          descriptionRef.current,
+          { autoAlpha: 0, y: 24 },
+          { autoAlpha: 1, y: 0, duration: 0.8, ease: 'power3.out' },
+          '-=0.62',
+        );
+    });
+
+    return () => ctx.revert();
+  }, [segment]);
 
   // Gentle 3D parallax: the copy leans towards the cursor
   const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -156,21 +226,30 @@ export const Hero: React.FC<HeroProps> = ({ onOpenQuoteModal, onOpenTrackingModa
           onPointerMove={onPointerMove}
           onPointerLeave={onPointerLeave}
         >
-          <p className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.25em] text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.8)]">
+          <p
+            ref={kickerRef}
+            className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.25em] text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.8)]"
+          >
             Two Plus Transportation
           </p>
 
-          <div key={segment} className="animate-[fadeIn_700ms_ease-out]">
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.08] text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.85)]">
+          <div>
+            <h1
+              ref={headlineRef}
+              className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.08] text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.85)] [transform-style:preserve-3d]"
+            >
               {current.title} <span className="text-white">{current.highlight}</span>
             </h1>
 
-            <p className="mt-4 text-base sm:text-lg text-white max-w-2xl leading-relaxed drop-shadow-[0_1px_10px_rgba(0,0,0,0.9)]">
+            <p
+              ref={descriptionRef}
+              className="mt-4 text-base sm:text-lg text-white max-w-2xl leading-relaxed drop-shadow-[0_1px_10px_rgba(0,0,0,0.9)]"
+            >
               {current.description}
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 pt-2">
+          <div ref={actionsRef} className="flex flex-wrap items-center gap-3 pt-2">
             <button
               onClick={() => onOpenQuoteModal?.()}
               className="inline-flex items-center gap-2 bg-gradient-to-r from-[#00A3FF] to-[#0055FF] text-white hover:brightness-110 px-8 py-4 rounded-xl text-xs font-black uppercase tracking-wider shadow-2xl shadow-blue-900/40 transition-all hover:-translate-y-0.5"
