@@ -75,12 +75,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onOpenTracking
     }`}>
 
       {/* ── Top Info Bar ── */}
-      <div className="text-white text-xs py-2 px-4 bg-slate-900 transition-colors duration-300">
-        <div className="max-w-7xl mx-auto flex justify-between items-center gap-2 px-10">
+      <div className="text-white text-[11px] sm:text-xs py-1.5 sm:py-2 bg-slate-900 transition-colors duration-300">
+        <div className="max-w-7xl mx-auto flex justify-between items-center gap-2 px-4 sm:px-6 lg:px-10">
           {/* Left: contact info */}
-          <div className="flex items-center space-x-5">
-            <a href={CONTACT_LINKS.telMobile} className="flex items-center space-x-1.5 text-slate-300 hover:text-[#00A3FF] transition-colors">
-              <Phone className="w-3 h-3 text-[#00A3FF]" />
+          <div className="flex items-center gap-3 sm:gap-5 min-w-0">
+            <a href={CONTACT_LINKS.telMobile} className="flex items-center gap-1 sm:gap-1.5 text-slate-300 hover:text-[#00A3FF] transition-colors whitespace-nowrap">
+              <Phone className="w-3 h-3 shrink-0 text-[#00A3FF]" />
               <span>24/7: {COMPANY_INFO.mobileDisplay}</span>
             </a>
             <a href={CONTACT_LINKS.mailto} className="hidden sm:flex items-center space-x-1.5 text-slate-300 hover:text-[#00A3FF] transition-colors">
@@ -95,9 +95,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onOpenTracking
           </div>
 
           {/* Right: WhatsApp + Language + Login */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
             {/* Language picker */}
-            <div className="relative" ref={langDD.ref}>
+            <div className="relative hidden sm:block" ref={langDD.ref}>
               <button onClick={() => langDD.setOpen(o => !o)}
                 className="flex items-center space-x-1 text-slate-300 hover:text-white px-2 py-0.5 rounded bg-slate-800 border border-slate-700 hover:border-[#00A3FF] transition-colors">
                 <Globe className="w-3 h-3 text-[#00A3FF]" />
@@ -119,9 +119,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onOpenTracking
 
             {/* Portal login */}
             <button onClick={onOpenAuthModal}
-              className="flex items-center space-x-1.5 text-[#0066FF] hover:text-white bg-sky-50 hover:bg-[#0066FF] px-3 py-1 rounded-md transition-all text-xs border border-sky-200 font-semibold">
-              <User className="w-3 h-3" />
-              <span>Login</span>
+              className="flex items-center gap-1 sm:gap-1.5 text-[#0066FF] hover:text-white bg-sky-50 hover:bg-[#0066FF] p-1.5 sm:px-3 sm:py-1 rounded-md transition-all text-[11px] sm:text-xs border border-sky-200 font-semibold">
+              <User className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Login</span>
             </button>
           </div>
         </div>
@@ -129,14 +129,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onOpenTracking
 
       {/* ── Main Navigation Bar ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
-        <div className="flex items-center justify-between h-18 gap-4">
+        <div className="flex items-center justify-between h-16 sm:h-18 gap-2 sm:gap-4">
 
           {/* Logo */}
           <Link to="/" className="flex-shrink-0 group" onClick={closeAll}>
             <img
               src="/images/logo1.png"
               alt="Two Plus Transportation"
-              className="h-10 sm:h-12 w-auto object-contain drop-shadow-[0_2px_6px_rgba(15,23,42,0.15)] group-hover:scale-105 transition-transform"
+              className="h-8 sm:h-12 w-auto object-contain drop-shadow-[0_2px_6px_rgba(15,23,42,0.15)] group-hover:scale-105 transition-transform"
             />
           </Link>
 
@@ -256,13 +256,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onOpenTracking
           </div>
 
           {/* ── Mobile Hamburger ── */}
-          <div className="flex items-center space-x-2 lg:hidden">
-            <button onClick={onOpenTrackingModal} className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
-              <Search className="w-5 h-5 text-[#0066FF]" />
+          <div className="flex items-center gap-1.5 sm:gap-2 lg:hidden">
+            <button onClick={onOpenTrackingModal} aria-label="Track booking" className="p-1.5 sm:p-2 rounded-lg hover:bg-slate-100 transition-colors">
+              <Search className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-[#0066FF]" />
             </button>
-            <button onClick={() => setMobileOpen(o => !o)}
-              className="p-2 rounded-lg hover:bg-sky-50 transition-colors">
-              {mobileOpen ? <X className="w-6 h-6 text-[#0066FF]" /> : <Menu className="w-6 h-6 text-slate-800" />}
+            <button onClick={() => setMobileOpen(o => !o)} aria-label="Toggle menu" className="p-1.5 sm:p-2 rounded-lg hover:bg-sky-50 transition-colors">
+              {mobileOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6 text-[#0066FF]" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-slate-800" />}
             </button>
           </div>
         </div>

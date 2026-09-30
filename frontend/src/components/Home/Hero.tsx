@@ -198,7 +198,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenQuoteModal, onOpenTrackingModa
   const current = SEGMENTS[segment];
 
   return (
-    <section className="relative w-full bg-slate-950 overflow-hidden min-h-[680px] lg:min-h-[800px] flex items-center text-white">
+    <section className="relative w-full bg-slate-950 overflow-hidden min-h-[600px] sm:min-h-[680px] lg:min-h-[800px] flex items-center text-white">
       {/* ================= LOOPING VIDEO BACKGROUND ================= */}
       <video
         ref={videoRef}
@@ -214,21 +214,21 @@ export const Hero: React.FC<HeroProps> = ({ onOpenQuoteModal, onOpenTrackingModa
       />
 
       {/* Cinematic grade + readability overlays */}
-      <div className="absolute inset-0 bg-slate-950/45" />
-      <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/55 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+      <div className="absolute inset-0 bg-slate-950/50 sm:bg-slate-950/45" />
+      <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/75 sm:via-slate-950/55 to-slate-950/30 sm:to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-32 sm:h-40 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
 
       {/* ================= HERO CONTENT ================= */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 w-full">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-28 w-full">
         <div
           ref={copyRef}
-          className="max-w-4xl space-y-7 [perspective:1200px] will-change-transform"
+          className="max-w-4xl space-y-5 sm:space-y-7 [perspective:1200px] will-change-transform"
           onPointerMove={onPointerMove}
           onPointerLeave={onPointerLeave}
         >
           <p
             ref={kickerRef}
-            className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.25em] text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.8)]"
+            className="text-[11px] sm:text-sm font-extrabold uppercase tracking-[0.2em] sm:tracking-[0.25em] text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.8)]"
           >
             Two Plus Transportation
           </p>
@@ -236,30 +236,30 @@ export const Hero: React.FC<HeroProps> = ({ onOpenQuoteModal, onOpenTrackingModa
           <div>
             <h1
               ref={headlineRef}
-              className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.08] text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.85)] [transform-style:preserve-3d]"
+              className="text-[32px] sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.08] text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.85)] [transform-style:preserve-3d]"
             >
               {current.title} <span className="text-white">{current.highlight}</span>
             </h1>
 
             <p
               ref={descriptionRef}
-              className="mt-4 text-base sm:text-lg text-white max-w-2xl leading-relaxed drop-shadow-[0_1px_10px_rgba(0,0,0,0.9)]"
+              className="mt-3 sm:mt-4 text-sm sm:text-lg text-white max-w-2xl leading-relaxed drop-shadow-[0_1px_10px_rgba(0,0,0,0.9)]"
             >
               {current.description}
             </p>
           </div>
 
-          <div ref={actionsRef} className="flex flex-wrap items-center gap-3 pt-2">
+          <div ref={actionsRef} className="flex flex-wrap items-center gap-2 sm:gap-3 pt-2">
             <button
               onClick={() => onOpenQuoteModal?.()}
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-[#00A3FF] to-[#0055FF] text-white hover:brightness-110 px-8 py-4 rounded-xl text-xs font-black uppercase tracking-wider shadow-2xl shadow-blue-900/40 transition-all hover:-translate-y-0.5"
+              className="inline-flex flex-1 sm:flex-none items-center justify-center gap-2 bg-gradient-to-r from-[#00A3FF] to-[#0055FF] text-white hover:brightness-110 px-3 sm:px-8 py-3 sm:py-4 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-wider sm:tracking-wider whitespace-nowrap shadow-2xl shadow-blue-900/40 transition-all hover:-translate-y-0.5"
             >
               <span>BOOK NOW</span>
               <ArrowRight className="w-4 h-4" />
             </button>
             <button
               onClick={() => onOpenTrackingModal?.()}
-              className="inline-flex items-center gap-2 border-2 border-white/60 text-white hover:bg-white hover:text-slate-900 px-8 py-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all hover:-translate-y-0.5"
+              className="inline-flex flex-1 sm:flex-none items-center justify-center gap-2 border-2 border-white/60 text-white hover:bg-white hover:text-slate-900 px-3 sm:px-8 py-3 sm:py-4 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-wider sm:tracking-wider whitespace-nowrap transition-all hover:-translate-y-0.5"
             >
               <span>TRACK BOOKING</span>
               <Search className="w-4 h-4" />

@@ -129,14 +129,14 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenQuoteModal }) 
         </div>
 
         {/* Stats: one quiet full-width row */}
-        <Stagger className="mt-20 grid grid-cols-1 border-t border-[#E2E8F0] sm:grid-cols-3" stagger={0.12}>
+        <Stagger className="mt-20 grid grid-cols-3 border-t border-[#E2E8F0]" stagger={0.12}>
           {STATS.map((stat, i) => (
             <div
               key={stat.label}
-              className={`py-8 sm:py-10 ${i > 0 ? 'border-t border-[#E2E8F0] sm:border-l sm:border-t-0 sm:pl-10' : ''}`}
+              className={`py-6 sm:py-10 ${i > 0 ? 'border-l border-[#E2E8F0] pl-3 sm:pl-10' : ''} pr-3 sm:pr-0`}
             >
-              <p className="text-5xl font-semibold tracking-[-0.04em] text-[#0B1B33] sm:text-6xl">{stat.value}</p>
-              <p className="mt-2 text-sm text-[#64748B]">{stat.label}</p>
+              <p className="text-2xl font-semibold tracking-[-0.04em] text-[#0B1B33] sm:text-6xl">{stat.value}</p>
+              <p className="mt-2 text-[11px] leading-snug text-[#64748B] sm:text-sm">{stat.label}</p>
             </div>
           ))}
         </Stagger>
