@@ -20,10 +20,6 @@ export const CallToAction: React.FC<CallToActionProps> = ({ onOpenQuoteModal }) 
 
           {/* Copy */}
           <div className="lg:col-span-7 space-y-5">
-            <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-[#0066FF]">
-              Corporate &amp; Event Travel
-            </p>
-
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
               Get in Touch
             </h2>
