@@ -5,3 +5,4 @@ export * from './MissionValues';
 export * from './FleetShowcase';
 export * from './LeadershipSection';
 export * from './Testimonials';
+export * from './CallToAction';

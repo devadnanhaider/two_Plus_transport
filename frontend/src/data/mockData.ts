@@ -48,7 +48,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     title: 'Staff Transportation',
     shortDesc: 'Reliable, scheduled daily corporate & industrial employee shuttle solutions.',
     description: 'Demand Transport provides cost-effective, punctual corporate commuting services. We ensure your workforce arrives safely and comfortably on site, with dedicated routes, GPS fleet tracking, and climate-controlled luxury coaches.',
-    image: '/images/school-staff.jpg',
+    image: '/images/hero-slides/slide-staff-transport.jpg',
     features: ['Fixed Route Schedules', 'GPS Live Tracking', 'AC Luxury Buses', 'Professional Uniformed Drivers', '24/7 Dispatch Control'],
     iconName: 'Users',
     pricingStarting: 'QAR 250 / Day'
@@ -58,7 +58,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     title: 'School Transportation',
     shortDesc: 'Highest safety standard student transit with certified drivers and real-time monitoring.',
     description: 'Prioritizing child safety above all. Safe, dependable school bus fleet equipped with seatbelts, female bus supervisors, CCTV cameras, and mobile app parent notification systems.',
-    image: '/images/school-staff.jpg',
+    image: '/images/hero-slides/slide-school-transport.jpg',
     features: ['Certified School Drivers', 'Child Safety Seatbelts', 'Female Bus Attendants', 'Parent Mobile Alerts', 'Regular Fleet Sanitization'],
     iconName: 'GraduationCap',
     pricingStarting: 'QAR 180 / Month per Student'
@@ -68,7 +68,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     title: 'Airport Taxi & VIP Transfers',
     shortDesc: 'Punctual, stress-free airport pickup & drop-off with flight delay tracking.',
     description: 'Experience premium airport transfers with meet-and-greet services. Our executive chauffeurs monitor your flight status in real-time, ensuring seamless airport arrivals and departures in executive sedans and luxury vans.',
-    image: '/images/airport-transport.jpg',
+    image: '/images/hero-slides/slide-airport-vip.jpg',
     features: ['Flight Delay Monitoring', 'Flight Hall Meet & Greet', 'Luxury Mercedes & Cadillac Fleet', 'Luggage Assistance', 'Fixed Flat Rates'],
     iconName: 'Plane',
     pricingStarting: 'QAR 120 / Trip'
@@ -78,7 +78,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     title: 'Valet Parking Services',
     shortDesc: 'VIP valet parking management for hotels, grand events, restaurants & venues.',
     description: 'Elevate your venue’s guest experience with our polished valet parking team. Trained attendants, secure vehicle handling, computerized key management, and full comprehensive insurance coverage.',
-    image: '/images/valet-parking.jpg',
+    image: '/images/hero-slides/slide-valet.jpg',
     features: ['Uniformed Professional Staff', 'Digital Ticket & Key Registry', 'Full Liability Insurance', 'VIP Guest Concierge', 'Peak Event Capacity Management'],
     iconName: 'Car',
     pricingStarting: 'QAR 350 / Event'
@@ -88,7 +88,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     title: 'Tour & Sightseeing Packages',
     shortDesc: 'Custom city tours, desert safari charters, and group sightseeing excursions.',
     description: 'Discover Qatar in luxury and comfort. We offer tailored tour itineraries for corporate delegates, tourist groups, and VIP guests, featuring multilingual tour guides and premium transport.',
-    image: '/images/hero-fleet.jpg',
+    image: '/images/hero-slides/slide-tours.jpg',
     features: ['Multilingual Tour Guides', 'Customizable Sightseeing Routes', 'Refreshment Amenities', 'Desert Safari Vans', 'Group Discount Packages'],
     iconName: 'Compass',
     pricingStarting: 'QAR 450 / Full Day'
@@ -98,7 +98,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     title: 'Towing & Roadside Assistance',
     shortDesc: '24/7 fast dispatch flatbed towing, breakdown rescue, and vehicle recovery.',
     description: 'Stranded on the road? Our heavy-duty hydraulic flatbed tow trucks provide instant emergency towing, jump-start assistance, tire change, and secure car transport across Qatar.',
-    image: '/images/towing-service.jpg',
+    image: '/images/hero-slides/slide-towing.jpg',
     features: ['Rapid 15-Minute Response', 'Hydraulic Tilt Flatbeds', 'Zero-Damage Wheel Strapping', 'Interstate Vehicle Hauling', '24/7 Hotline Support'],
     iconName: 'Truck',
     pricingStarting: 'QAR 100 / Tow'

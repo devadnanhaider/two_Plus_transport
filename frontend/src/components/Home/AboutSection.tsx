@@ -1,100 +1,143 @@
 import React from 'react';
-import { ArrowRight, Plane, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Headset, Star, Users } from 'lucide-react';
 import { COMPANY_INFO, CONTACT_LINKS } from '../../data/companyInfo';
 
 interface AboutSectionProps {
   onOpenQuoteModal: () => void;
 }
 
+const STATS = [
+  { value: '500+', label: 'Modern vehicles' },
+  { value: '100K+', label: 'Happy passengers' },
+  { value: '99.8%', label: 'On-time arrival' },
+];
+
+const HIGHLIGHTS = [
+  { icon: ShieldCheck, title: 'Safety first', text: 'Daily inspections and background-checked drivers.' },
+  { icon: Headset, title: '24/7 dispatch', text: 'Live GPS and a round-the-clock hotline.' },
+  { icon: Users, title: 'Professional teams', text: 'Uniformed drivers and hospitality-grade valet staff.' },
+  { icon: Star, title: 'Premium fleet', text: 'Executive sedans, luxury coaches and event-ready cars.' },
+];
+
+// Live-board rows: status colour carries meaning (green = on time, blue = en route, amber = pickup soon)
+const DISPATCH = [
+  { job: 'Airport transfer', place: 'Hamad International', status: 'On time', dot: '#16A34A', text: '#15803D' },
+  { job: 'Staff shuttle', place: 'Industrial Area', status: 'En route', dot: '#0066FF', text: '#0052CC' },
+  { job: 'School run', place: 'West Bay', status: 'Pickup 07:10', dot: '#F59E0B', text: '#B45309' },
+];
+
 export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenQuoteModal }) => {
   return (
-    <section className="py-20 bg-white relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          
-          <div className="lg:col-span-5 relative">
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-slate-100 group">
-              <img 
-                src="/images/airport-transport.jpg" 
-                alt="Two Plus Transport Qatar Executive Fleet" 
-                className="w-full h-[450px] object-cover group-hover:scale-105 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
-              
-              <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md p-4 rounded-2xl border border-white/60 shadow-xl flex items-center justify-around text-center">
-                <div>
-                  <p className="text-2xl font-black text-[#0066FF]">500+</p>
-                  <p className="text-[10px] font-bold text-slate-600 uppercase">Modern Vehicles</p>
-                </div>
-                <div className="h-8 w-px bg-slate-200"></div>
-                <div>
-                  <p className="text-2xl font-black text-slate-900">100K+</p>
-                  <p className="text-[10px] font-bold text-slate-600 uppercase">Happy Passengers</p>
-                </div>
-                <div className="h-8 w-px bg-slate-200"></div>
-                <div>
-                  <p className="text-2xl font-black text-[#0066FF]">99.8%</p>
-                  <p className="text-[10px] font-bold text-slate-600 uppercase">On-Time Arrival</p>
-                </div>
-              </div>
-            </div>
+    <section className="bg-white py-20 sm:py-28">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 items-start gap-14 lg:grid-cols-12 lg:gap-16">
 
-            <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-blue-200/50 rounded-full blur-3xl -z-10"></div>
-          </div>
-
-          <div className="lg:col-span-7 space-y-6">
-           
-
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
-              Leading Provider of Executive Transportation & Fleet Management
+          {/* ── Copy ── */}
+          <div className="lg:col-span-7 lg:pt-6">
+            <h2 className="max-w-2xl text-4xl font-semibold leading-[1.05] tracking-[-0.03em] text-[#0B1B33] sm:text-5xl lg:text-6xl">
+              Premium transport, delivered on time.
             </h2>
 
-            <div className="w-20 h-1 bg-[#0066FF] rounded-full"></div>
-
-            <p className="text-slate-700 text-sm sm:text-base leading-relaxed text-justify font-light">
-              <strong className="font-bold text-slate-900">Two Plus Transport</strong> is a premier transportation services provider in Qatar, specializing in staff transportation, school transportation, airport taxi transfers, valet parking management, tour packages, and roadside towing. We offer reliable, safe, and efficient mobility solutions ensuring your employees, students, and guests travel comfortably and strictly on schedule.
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-[#475569] sm:text-lg">
+              <span className="font-semibold text-[#0B1B33]">Two Plus Transportation</span> moves
+              Qatar&rsquo;s employees, students and guests. Staff shuttles, school runs, airport
+              transfers, valet, tours and 24/7 towing, all from one licensed fleet.
             </p>
 
-            <p className="text-slate-600 text-sm leading-relaxed">
-              Our safety-first fleet features state-of-the-art vehicles equipped with real-time GPS tracking, climate control, certified professional chauffeurs, and 24/7 centralized dispatch support.
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100 flex items-start space-x-3">
-                <CheckCircle2 className="w-5 h-5 text-[#0066FF] mt-0.5 shrink-0" />
-                <div>
-                  <h4 className="text-xs font-bold text-slate-900 uppercase">Rigorous Safety Standards</h4>
-                  <p className="text-[11px] text-slate-600">Daily vehicle inspection & background checked drivers</p>
+            {/* Highlights: ruled list instead of boxed cards */}
+            <dl className="mt-12 grid grid-cols-1 gap-x-10 sm:grid-cols-2">
+              {HIGHLIGHTS.map(({ icon: Icon, title, text }) => (
+                <div key={title} className="flex gap-4 border-t border-[#E2E8F0] py-6">
+                  <Icon className="mt-0.5 h-5 w-5 shrink-0 text-[#0066FF]" aria-hidden="true" />
+                  <div>
+                    <dt className="text-sm font-semibold text-[#0B1B33]">{title}</dt>
+                    <dd className="mt-1 text-sm leading-relaxed text-[#64748B]">{text}</dd>
+                  </div>
                 </div>
-              </div>
-              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100 flex items-start space-x-3">
-                <CheckCircle2 className="w-5 h-5 text-[#0066FF] mt-0.5 shrink-0" />
-                <div>
-                  <h4 className="text-xs font-bold text-slate-900 uppercase">24/7 Dedicated Dispatch</h4>
-                  <p className="text-[11px] text-slate-600">Round-the-clock hotline & live GPS telemetry</p>
-                </div>
-              </div>
-            </div>
+              ))}
+            </dl>
 
-            <div className="pt-4 flex flex-wrap gap-4">
+            {/* Actions */}
+            <div className="mt-6 flex flex-wrap items-center gap-3">
               <button
                 onClick={onOpenQuoteModal}
-                className="bg-gradient-to-r from-[#00A3FF] to-[#0055FF] text-white px-6 py-3 rounded-xl text-xs font-extrabold flex items-center space-x-2 shadow-md hover:brightness-110"
+                className="inline-flex items-center gap-2 rounded-full bg-[#0066FF] px-7 py-4 text-sm font-semibold text-white shadow-[0_12px_30px_-12px_rgba(0,102,255,0.7)] transition hover:bg-[#0052CC] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0066FF] focus-visible:ring-offset-2"
               >
-                <span>REQUEST COMPANY PROPOSAL</span>
-                <ArrowRight className="w-4 h-4" />
+                Request a company proposal
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </button>
               <a
                 href={CONTACT_LINKS.whatsapp}
                 target="_blank"
                 rel="noreferrer"
-                className="border-2 border-[#0066FF] text-[#0066FF] hover:bg-sky-50 px-6 py-3 rounded-xl text-xs font-extrabold flex items-center space-x-2"
+                className="inline-flex items-center gap-2 rounded-full border border-[#CBD5E1] bg-white px-7 py-4 text-sm font-semibold text-[#0B1B33] transition hover:border-[#25D366] hover:text-[#128C4A] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2"
               >
-                <span>CHAT ON WHATSAPP {COMPANY_INFO.whatsappDisplay}</span>
+                <span className="h-2 w-2 rounded-full bg-[#25D366]" aria-hidden="true" />
+                WhatsApp {COMPANY_INFO.whatsappDisplay}
               </a>
             </div>
           </div>
 
+          {/* ── Visual ── */}
+          <div className="relative lg:col-span-5">
+            <div className="relative overflow-hidden rounded-[2rem]">
+              <img
+                src="/images/about-fleet.jpg"
+                alt="Two Plus Transportation executive fleet in Qatar"
+                className="h-[520px] w-full object-cover sm:h-[600px]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0B1B33]/60 via-transparent to-transparent" />
+            </div>
+
+            {/* The memorable moment: a live dispatch board overlapping the photo */}
+            <div
+              className="relative z-10 -mt-44 mx-4 rounded-2xl bg-white p-5 shadow-[0_30px_60px_-20px_rgba(11,27,51,0.45)] ring-1 ring-[#0B1B33]/5 sm:-mt-40 sm:mx-8"
+              role="region"
+              aria-label="Live dispatch board"
+            >
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-semibold text-[#0B1B33]">Live dispatch</p>
+                <span className="inline-flex items-center gap-2 text-xs font-medium text-[#15803D]">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-[#16A34A] opacity-60 motion-safe:animate-ping" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-[#16A34A]" />
+                  </span>
+                  Across Qatar
+                </span>
+              </div>
+
+              <ul className="mt-4 divide-y divide-[#EEF2F7]">
+                {DISPATCH.map(row => (
+                  <li key={row.job} className="flex items-center justify-between gap-3 py-3">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium text-[#0B1B33]">{row.job}</p>
+                      <p className="truncate text-xs text-[#64748B]">{row.place}</p>
+                    </div>
+                    <span
+                      className="inline-flex shrink-0 items-center gap-2 text-xs font-semibold"
+                      style={{ color: row.text }}
+                    >
+                      <span className="h-2 w-2 rounded-full" style={{ backgroundColor: row.dot }} aria-hidden="true" />
+                      {row.status}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Stats: one quiet full-width row */}
+        <div className="mt-20 grid grid-cols-1 border-t border-[#E2E8F0] sm:grid-cols-3">
+          {STATS.map((stat, i) => (
+            <div
+              key={stat.label}
+              className={`py-8 sm:py-10 ${i > 0 ? 'border-t border-[#E2E8F0] sm:border-l sm:border-t-0 sm:pl-10' : ''}`}
+            >
+              <p className="text-5xl font-semibold tracking-[-0.04em] text-[#0B1B33] sm:text-6xl">{stat.value}</p>
+              <p className="mt-2 text-sm text-[#64748B]">{stat.label}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
