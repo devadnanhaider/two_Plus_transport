@@ -76,7 +76,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onOpenTracking
 
       {/* ── Top Info Bar ── */}
       <div className="text-white text-xs py-2 px-4 bg-slate-900 transition-colors duration-300">
-        <div className="max-w-7xl mx-auto flex justify-between items-center gap-2">
+        <div className="max-w-7xl mx-auto flex justify-between items-center gap-2 px-10">
           {/* Left: contact info */}
           <div className="flex items-center space-x-5">
             <a href={CONTACT_LINKS.telMobile} className="flex items-center space-x-1.5 text-slate-300 hover:text-[#00A3FF] transition-colors">
@@ -136,7 +136,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onOpenTracking
             <img
               src="/images/logo1.png"
               alt="Two Plus Transportation"
-              className="h-10 sm:h-15 w-auto object-contain drop-shadow-[0_2px_6px_rgba(15,23,42,0.15)] group-hover:scale-105 transition-transform"
+              className="h-10 sm:h-12 w-auto object-contain drop-shadow-[0_2px_6px_rgba(15,23,42,0.15)] group-hover:scale-105 transition-transform"
             />
           </Link>
 
