@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 220" fill="none">
+  <defs>
+    <linearGradient id="tptBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00A3FF" />
+      <stop offset="100%" stop-color="#0055FF" />
+    </linearGradient>
+  </defs>
+
+  <!-- Bus Roof Rack / Cover -->
+  <path d="M 140 70 L 265 72 L 250 88 L 130 90 Z" fill="url(#tptBlue)" />
+  <!-- Roof Rib lines -->
+  <line x1="145" y1="74" x2="255" y2="76" stroke="#FFFFFF" stroke-width="2"/>
+  <line x1="140" y1="80" x2="252" y2="82" stroke="#FFFFFF" stroke-width="2"/>
+  <line x1="135" y1="86" x2="248" y2="87" stroke="#FFFFFF" stroke-width="2"/>
+
+  <!-- Ground Shadow -->
+  <path d="M 140 160 L 265 175 L 140 170 Z" fill="#0B132B" opacity="0.8"/>
+
+  <!-- Bus Body Dark Base -->
+  <path d="M 130 95 C 130 95, 235 90, 245 92 C 265 95, 268 115, 268 135 C 268 150, 255 155, 240 155 L 135 145 Z" fill="#0B132B"/>
+
+  <!-- Bus Main White Body -->
+  <path d="M 130 98 C 130 98, 230 94, 240 96 C 255 98, 262 112, 262 130 C 262 145, 250 148, 235 148 L 135 140 C 130 135, 128 115, 130 98 Z" fill="#FFFFFF"/>
+
+  <!-- Bus Windows (Dark Blue) -->
+  <path d="M 135 104 L 152 103 L 152 120 L 135 120 Z" fill="#0B132B"/>
+  <path d="M 158 103 L 182 102 L 182 120 L 158 120 Z" fill="#0B132B"/>
+  <path d="M 188 102 L 212 101 L 212 120 L 188 120 Z" fill="#0B132B"/>
+  <!-- Front Windshield -->
+  <path d="M 218 101 L 242 100 C 252 102, 256 112, 256 122 L 235 122 L 218 120 Z" fill="#0B132B"/>
+  
+  <!-- Front Headlight & Grill -->
+  <path d="M 245 132 L 255 132 C 255 136, 250 140, 242 140 Z" fill="#00A3FF"/>
+
+  <!-- Wheels -->
+  <circle cx="148" cy="142" r="9" fill="#0B132B"/>
+  <circle cx="148" cy="142" r="5" fill="#FFFFFF"/>
+  <circle cx="210" cy="144" r="9" fill="#0B132B"/>
+  <circle cx="210" cy="144" r="5" fill="#FFFFFF"/>
+
+  <!-- T.P.T Cursive Text on Side -->
+  <text x="165" y="138" font-family="Georgia, serif" font-style="italic" font-weight="bold" font-size="16" fill="#00A3FF">
+    T.P.T
+  </text>
+</svg>

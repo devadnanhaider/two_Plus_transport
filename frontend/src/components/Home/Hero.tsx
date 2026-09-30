@@ -1,0 +1,159 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { ArrowRight, Search } from 'lucide-react';
+
+const HERO_VIDEO = '/videos/hero-services.mp4';
+const HERO_POSTER = '/images/hero-slides/slide-staff-transport.jpg';
+
+interface HeroSegment {
+  /** Seconds into hero-services.mp4 where this service scene appears */
+  start: number;
+  title: string;
+  highlight: string;
+  description: string;
+}
+
+// Timings follow the montage: each of the six scenes runs 4s with a 0.7s crossfade,
+// so the copy switches at the midpoint of every transition.
+const TEXT_HOLD_MS = 3000;
+const SEGMENTS: HeroSegment[] = [
+  {
+    start: 0,
+    title: 'Corporate &',
+    highlight: 'Industrial Shuttles',
+    description:
+      'Fixed-route employee shuttles, campus and industrial-site transport with climate-controlled coaches and uniformed professional drivers.',
+  },
+  {
+    start: 3.65,
+    title: 'School',
+    highlight: 'Transportation',
+    description:
+      'Certified school buses with seatbelts, CCTV, female bus attendants and live parent notifications for a safe daily school run.',
+  },
+  {
+    start: 6.95,
+    title: 'Airport Taxi &',
+    highlight: 'VIP Transfers',
+    description:
+      'Flight-monitored meet-and-greet arrivals, luggage assistance and executive sedans and luxury vans for terminals and hotels.',
+  },
+  {
+    start: 10.25,
+    title: 'Hotel & Event',
+    highlight: 'Valet Parking',
+    description:
+      'Uniformed, trained valet teams for hotels, restaurants and grand events with digital key tracking and full insurance cover.',
+  },
+  {
+    start: 13.55,
+    title: 'Tour &',
+    highlight: 'Sightseeing',
+    description:
+      'City tours, desert safari charters and group excursions with multilingual guides, refreshments and flexible itineraries.',
+  },
+  {
+    start: 16.85,
+    title: '24/7 Towing &',
+    highlight: 'Roadside Recovery',
+    description:
+      'Hydraulic flatbed towing, jump starts, tyre changes and secure vehicle recovery on every highway and street in Qatar.',
+  },
+];
+
+interface HeroProps {
+  onOpenQuoteModal?: (serviceType?: string) => void;
+  onOpenTrackingModal?: () => void;
+}
+
+export const Hero: React.FC<HeroProps> = ({ onOpenQuoteModal, onOpenTrackingModal }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [segment, setSegment] = useState(0);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.play().catch(() => undefined);
+
+    // Copy follows the scene playing in the video, holding each headline for 3 seconds
+    let frame = 0;
+    let lastSwitch = performance.now();
+    let shown = 0;
+    const sync = () => {
+      const time = video.currentTime;
+      let target = 0;
+      for (let i = 0; i < SEGMENTS.length; i += 1) {
+        if (time >= SEGMENTS[i].start) target = i;
+      }
+      if (target !== shown && performance.now() - lastSwitch >= TEXT_HOLD_MS) {
+        shown = target;
+        lastSwitch = performance.now();
+        setSegment(target);
+      }
+      frame = window.requestAnimationFrame(sync);
+    };
+    frame = window.requestAnimationFrame(sync);
+
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+
+  const current = SEGMENTS[segment];
+
+  return (
+    <section className="relative w-full bg-slate-950 overflow-hidden min-h-[680px] lg:min-h-[800px] flex items-center text-white">
+      {/* ================= LOOPING VIDEO BACKGROUND ================= */}
+      <video
+        ref={videoRef}
+        src={HERO_VIDEO}
+        poster={HERO_POSTER}
+        aria-label="Two Plus Transportation fleet serving staff shuttles, school transport, airport transfers, valet parking, tours and towing"
+        className="absolute inset-0 w-full h-full object-cover object-center"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+      />
+
+      {/* Cinematic grade + readability overlays */}
+      <div className="absolute inset-0 bg-slate-950/45" />
+      <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/55 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+
+      {/* ================= HERO CONTENT ================= */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 w-full">
+        <div className="max-w-4xl space-y-7">
+          <p className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.25em] text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.8)]">
+            Two Plus Transportation
+          </p>
+
+          <div key={segment} className="animate-[fadeIn_700ms_ease-out]">
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.08] text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.85)]">
+              {current.title} <span className="text-white">{current.highlight}</span>
+            </h1>
+
+            <p className="mt-4 text-base sm:text-lg text-white max-w-2xl leading-relaxed drop-shadow-[0_1px_10px_rgba(0,0,0,0.9)]">
+              {current.description}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3 pt-2">
+            <button
+              onClick={() => onOpenQuoteModal?.()}
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-[#00A3FF] to-[#0055FF] text-white hover:brightness-110 px-8 py-4 rounded-xl text-xs font-black uppercase tracking-wider shadow-2xl shadow-blue-900/40 transition-all hover:-translate-y-0.5"
+            >
+              <span>BOOK NOW</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => onOpenTrackingModal?.()}
+              className="inline-flex items-center gap-2 border-2 border-white/60 text-white hover:bg-white hover:text-slate-900 px-8 py-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all hover:-translate-y-0.5"
+            >
+              <span>TRACK BOOKING</span>
+              <Search className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
