@@ -1,14 +1,14 @@
 import React from 'react';
 import { TESTIMONIALS_DATA } from '../../data/mockData';
 import { Star, Quote } from 'lucide-react';
+import { Reveal, Stagger } from '../common';
 
 export const Testimonials: React.FC = () => {
   return (
     <section className="py-20 bg-slate-50 border-t border-slate-200/80 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          
+<Reveal className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
             Trusted by Leaders Across Qatar
           </h2>
@@ -16,9 +16,9 @@ export const Testimonials: React.FC = () => {
           <p className="text-slate-600 text-sm font-light">
             Read what corporate event organizers, school boards, and resort directors say about our service.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <Stagger className="grid grid-cols-1 md:grid-cols-3 gap-8" stagger={0.12}>
           {TESTIMONIALS_DATA.map((t) => (
             <div
               key={t.id}
@@ -48,9 +48,9 @@ export const Testimonials: React.FC = () => {
                   <p className="text-xs text-slate-500">{t.role}, <span className="text-[#0066FF] font-semibold">{t.company}</span></p>
                 </div>
               </div>
-            </div>
+</div>
           ))}
-        </div>
+        </Stagger>
 
       </div>
     </section>

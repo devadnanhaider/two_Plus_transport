@@ -1,14 +1,14 @@
 import React from 'react';
 import { TEAM_MEMBERS } from '../../data/mockData';
 import { Mail, Phone } from 'lucide-react';
+import { Reveal, Stagger } from '../common';
 
 export const LeadershipSection: React.FC = () => {
   return (
     <section className="py-20 bg-white relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          
+<Reveal className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
             Our Leadership Team
           </h2>
@@ -16,9 +16,9 @@ export const LeadershipSection: React.FC = () => {
           <p className="text-slate-600 text-sm font-light">
             Dedicated transport professionals committed to delivering operational excellence and passenger safety every day.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <Stagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8" stagger={0.1}>
           {TEAM_MEMBERS.map((member, idx) => (
             <div
               key={idx}
@@ -58,9 +58,9 @@ export const LeadershipSection: React.FC = () => {
                   </a>
                 </div>
               </div>
-            </div>
+</div>
           ))}
-        </div>
+        </Stagger>
 
       </div>
     </section>

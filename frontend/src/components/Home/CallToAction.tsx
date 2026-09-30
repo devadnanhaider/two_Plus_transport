@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight, MessageCircle, Clock3, FileText, Bus } from 'lucide-react';
 import { COMPANY_INFO, CONTACT_LINKS } from '../../data/companyInfo';
+import { Reveal, TiltCard } from '../common';
 
 interface CallToActionProps {
   onOpenQuoteModal: () => void;
@@ -17,9 +18,7 @@ export const CallToAction: React.FC<CallToActionProps> = ({ onOpenQuoteModal }) 
     <section className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center rounded-3xl border border-slate-200 bg-slate-50/60 p-8 sm:p-10">
-
-          {/* Copy */}
-          <div className="lg:col-span-7 space-y-5">
+          <Reveal className="lg:col-span-7 space-y-5">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
               Get in Touch
             </h2>
@@ -38,11 +37,12 @@ export const CallToAction: React.FC<CallToActionProps> = ({ onOpenQuoteModal }) 
                 </li>
               ))}
             </ul>
-          </div>
+          </Reveal>
 
           {/* Booking card */}
-          <div className="lg:col-span-5">
-            <div className="rounded-2xl bg-white border border-slate-200 shadow-sm p-6">
+          <Reveal className="lg:col-span-5" delay={0.1}>
+            <TiltCard max={6} lift={8}>
+            <div className="rounded-2xl bg-white border border-slate-200 shadow-sm p-6 h-full">
               <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-slate-500">
                 Start Your Booking
               </p>
@@ -77,7 +77,8 @@ export const CallToAction: React.FC<CallToActionProps> = ({ onOpenQuoteModal }) 
                 </a>
               </p>
             </div>
-          </div>
+            </TiltCard>
+          </Reveal>
 
         </div>
       </div>

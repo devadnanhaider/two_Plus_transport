@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Search } from 'lucide-react';
+import { gsap } from 'gsap';
 
 const HERO_VIDEO = '/videos/hero-services.mp4';
 const HERO_POSTER = '/images/hero-slides/slide-staff-transport.jpg';
@@ -67,6 +68,7 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ onOpenQuoteModal, onOpenTrackingModal }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const copyRef = useRef<HTMLDivElement>(null);
   const [segment, setSegment] = useState(0);
 
   useEffect(() => {
@@ -96,6 +98,33 @@ export const Hero: React.FC<HeroProps> = ({ onOpenQuoteModal, onOpenTrackingModa
     return () => window.cancelAnimationFrame(frame);
   }, []);
 
+  // Gentle 3D parallax: the copy leans towards the cursor
+  const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const node = copyRef.current;
+    if (!node) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (window.matchMedia('(hover: none)').matches) return;
+
+    const rect = node.getBoundingClientRect();
+    const px = (event.clientX - rect.left) / rect.width - 0.5;
+    const py = (event.clientY - rect.top) / rect.height - 0.5;
+
+    gsap.to(node, {
+      rotationY: px * 6,
+      rotationX: -py * 5,
+      transformPerspective: 1200,
+      duration: 0.6,
+      ease: 'power3.out',
+      overwrite: 'auto',
+    });
+  };
+
+  const onPointerLeave = () => {
+    const node = copyRef.current;
+    if (!node) return;
+    gsap.to(node, { rotationX: 0, rotationY: 0, duration: 0.8, ease: 'power3.out', overwrite: 'auto' });
+  };
+
   const current = SEGMENTS[segment];
 
   return (
@@ -121,7 +150,12 @@ export const Hero: React.FC<HeroProps> = ({ onOpenQuoteModal, onOpenTrackingModa
 
       {/* ================= HERO CONTENT ================= */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 w-full">
-        <div className="max-w-4xl space-y-7">
+        <div
+          ref={copyRef}
+          className="max-w-4xl space-y-7 [perspective:1200px] will-change-transform"
+          onPointerMove={onPointerMove}
+          onPointerLeave={onPointerLeave}
+        >
           <p className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.25em] text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.8)]">
             Two Plus Transportation
           </p>

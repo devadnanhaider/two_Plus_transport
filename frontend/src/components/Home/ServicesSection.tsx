@@ -1,5 +1,6 @@
 import React from 'react';
 import { SERVICES_DATA, ServiceItem } from '../../data/mockData';
+import { Reveal, Stagger, TiltCard } from '../common';
 import {
   Users, GraduationCap, Plane, Car, Compass, Truck,
   ArrowRight, Clock
@@ -29,7 +30,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenQuoteMod
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* ── Section heading ── */}
-        <div className="text-center max-w-3xl mx-auto mb-14 space-y-4">
+        <Reveal className="text-center max-w-3xl mx-auto mb-14 space-y-4">
           
 
           <h2 className="text-3xl sm:text-4xl lg:text-[2.6rem] font-extrabold text-slate-900 tracking-tight leading-[1.15]">
@@ -39,15 +40,15 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenQuoteMod
           <p className="text-slate-600 text-sm sm:text-base font-light leading-relaxed pt-1">
             Whether you need daily corporate staff shuttles, secure school transit, VIP airport
             taxis, or 24/7 towing, our fleet is at your service.
-          </p>
-        </div>
+</p>
+        </Reveal>
 
         {/* ── Cards ── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-          {SERVICES_DATA.map((service: ServiceItem, index: number) => (
+        <Stagger className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+{SERVICES_DATA.map((service: ServiceItem, index: number) => (
+            <TiltCard key={service.id} max={7} lift={12}>
             <article
-              key={service.id}
-              className="group relative bg-white rounded-3xl border border-slate-200 shadow-[0_2px_18px_-8px_rgba(15,23,42,0.15)] hover:shadow-[0_28px_60px_-24px_rgba(15,23,42,0.35)] transition-all duration-300 hover:-translate-y-1.5 hover:border-[#FF6B00]/40 overflow-hidden flex flex-col"
+              className="group relative bg-white rounded-3xl border border-slate-200 shadow-[0_2px_18px_-8px_rgba(15,23,42,0.15)] hover:shadow-[0_28px_60px_-24px_rgba(15,23,42,0.35)] transition-shadow duration-300 hover:border-[#FF6B00]/40 overflow-hidden flex flex-col h-full"
             >
               {/* Top accent bar */}
               <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#FF6B00] to-[#FFB020] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
@@ -100,9 +101,10 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenQuoteMod
                   </button>
                 </div>
               </div>
-            </article>
+</article>
+            </TiltCard>
           ))}
-        </div>
+        </Stagger>
 
       </div>
     </section>

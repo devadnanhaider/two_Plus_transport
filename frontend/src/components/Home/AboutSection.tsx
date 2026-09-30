@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight, ShieldCheck, Headset, Star, Users } from 'lucide-react';
 import { COMPANY_INFO, CONTACT_LINKS } from '../../data/companyInfo';
+import { Reveal, Stagger, TiltCard } from '../common';
 
 interface AboutSectionProps {
   onOpenQuoteModal: () => void;
@@ -33,7 +34,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenQuoteModal }) 
         <div className="grid grid-cols-1 items-start gap-14 lg:grid-cols-12 lg:gap-16">
 
           {/* ── Copy ── */}
-          <div className="lg:col-span-7 lg:pt-6">
+<Reveal className="lg:col-span-7 lg:pt-6">
             <h2 className="max-w-2xl text-4xl font-semibold leading-[1.05] tracking-[-0.03em] text-[#0B1B33] sm:text-5xl lg:text-6xl">
               Premium transport, delivered on time.
             </h2>
@@ -45,7 +46,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenQuoteModal }) 
             </p>
 
             {/* Highlights: ruled list instead of boxed cards */}
-            <dl className="mt-12 grid grid-cols-1 gap-x-10 sm:grid-cols-2">
+<Stagger className="mt-12 grid grid-cols-1 gap-x-10 sm:grid-cols-2" stagger={0.1}>
               {HIGHLIGHTS.map(({ icon: Icon, title, text }) => (
                 <div key={title} className="flex gap-4 border-t border-[#E2E8F0] py-6">
                   <Icon className="mt-0.5 h-5 w-5 shrink-0 text-[#0066FF]" aria-hidden="true" />
@@ -55,7 +56,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenQuoteModal }) 
                   </div>
                 </div>
               ))}
-            </dl>
+            </Stagger>
 
             {/* Actions */}
             <div className="mt-6 flex flex-wrap items-center gap-3">
@@ -75,16 +76,16 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenQuoteModal }) 
                 <span className="h-2 w-2 rounded-full bg-[#25D366]" aria-hidden="true" />
                 WhatsApp {COMPANY_INFO.whatsappDisplay}
               </a>
-            </div>
-          </div>
+</div>
+          </Reveal>
 
           {/* ── Visual ── */}
-          <div className="relative lg:col-span-5">
-            <div className="relative overflow-hidden rounded-[2rem]">
+          <Reveal className="relative lg:col-span-5" delay={0.12}>
+            <div className="relative overflow-hidden rounded-[2rem] [perspective:1100px]">
               <img
                 src="/images/about-fleet.jpg"
                 alt="Two Plus Transportation executive fleet in Qatar"
-                className="h-[520px] w-full object-cover sm:h-[600px]"
+                className="h-[520px] w-full object-cover sm:h-[600px] transition-transform duration-700 hover:scale-[1.03]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0B1B33]/60 via-transparent to-transparent" />
             </div>
@@ -123,12 +124,12 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenQuoteModal }) 
                   </li>
                 ))}
               </ul>
-            </div>
-          </div>
+</div>
+          </Reveal>
         </div>
 
         {/* Stats: one quiet full-width row */}
-        <div className="mt-20 grid grid-cols-1 border-t border-[#E2E8F0] sm:grid-cols-3">
+        <Stagger className="mt-20 grid grid-cols-1 border-t border-[#E2E8F0] sm:grid-cols-3" stagger={0.12}>
           {STATS.map((stat, i) => (
             <div
               key={stat.label}
@@ -138,7 +139,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenQuoteModal }) 
               <p className="mt-2 text-sm text-[#64748B]">{stat.label}</p>
             </div>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );
