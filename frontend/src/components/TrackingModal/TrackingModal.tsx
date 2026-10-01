@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { X, Search, Package, MapPin, Clock, CheckCircle, AlertTriangle, Truck } from 'lucide-react';
+import api, { extractError } from '../../lib/apiClient';
+import { BOOKING_STATUSES, statusTone, type Booking } from '../../lib/adminTypes';
+import { useToast } from '../common/ToastProvider';
 
 interface TrackingModalProps {
   isOpen: boolean;
@@ -8,37 +11,39 @@ interface TrackingModalProps {
 
 type TrackingStatus = 'idle' | 'loading' | 'found' | 'not_found';
 
-const MOCK_BOOKING = {
-  id: 'TPT-2026-1234',
-  service: 'Staff Transportation',
-  status: 'In Transit',
-  driver: 'Ali Hassan',
-  driverPhone: '+974 5556 7890',
-  vehicle: 'Toyota Coaster – Plate: QAR 2891',
-  pickup: 'Industrial Area, Gate 4',
-  dropoff: 'West Bay Corporate Hub',
-  estimatedArrival: '8:42 AM',
-  passengerCount: 18,
-  date: 'Sep 29, 2026',
-  steps: [
-    { label: 'Booking Confirmed', done: true, time: '7:00 AM' },
-    { label: 'Driver Dispatched', done: true, time: '7:15 AM' },
-    { label: 'Pickup Complete', done: true, time: '7:35 AM' },
-    { label: 'In Transit', done: true, time: '7:40 AM', active: true },
-    { label: 'Destination Arrived', done: false, time: 'Est. 8:42 AM' },
-  ],
+const JOURNEY_STEPS = BOOKING_STATUSES.filter(status => status !== 'Cancelled');
+
+const buildSteps = (booking: Booking) => {
+  const currentIndex = JOURNEY_STEPS.indexOf(booking.status);
+
+  return JOURNEY_STEPS.map((label, index) => {
+    const historyEntry = booking.statusHistory?.find(entry => entry.status === label);
+    return {
+      label,
+      done: currentIndex >= index,
+      active: currentIndex === index,
+      time: historyEntry?.at
+        ? new Date(historyEntry.at).toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })
+        : currentIndex === index
+          ? 'Current'
+          : '',
+    };
+  });
 };
 
 export const TrackingModal: React.FC<TrackingModalProps> = ({ isOpen, onClose }) => {
+  const toast = useToast();
   const [bookingId, setBookingId] = useState('');
   const [status, setStatus] = useState<TrackingStatus>('idle');
-  const [result, setResult] = useState<typeof MOCK_BOOKING | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<Booking | null>(null);
 
   useEffect(() => {
     if (isOpen) {
       setBookingId('');
       setStatus('idle');
       setResult(null);
+      setError(null);
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
@@ -48,20 +53,29 @@ export const TrackingModal: React.FC<TrackingModalProps> = ({ isOpen, onClose })
 
   if (!isOpen) return null;
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!bookingId.trim()) return;
+    const reference = bookingId.trim();
+    if (!reference) return;
 
     setStatus('loading');
-    setTimeout(() => {
-      if (bookingId.trim().toUpperCase() === 'TPT-2026-1234' || bookingId.trim() === '1234') {
-        setResult(MOCK_BOOKING);
-        setStatus('found');
-      } else {
-        setStatus('not_found');
-      }
-    }, 1200);
+    setError(null);
+
+    try {
+      const res = await api.get<{ booking: Booking }>(`/bookings/track/${encodeURIComponent(reference)}`);
+      setResult(res.data.booking);
+      setStatus('found');
+      toast.success('Booking found', `${res.data.booking.trackingId} · ${res.data.booking.status}`);
+    } catch (err) {
+      const message = extractError(err, 'No booking found for that reference');
+      setError(message);
+      setResult(null);
+      setStatus('not_found');
+      toast.error('Booking not found', message);
+    }
   };
+
+  const steps = result ? buildSteps(result) : [];
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -92,14 +106,14 @@ export const TrackingModal: React.FC<TrackingModalProps> = ({ isOpen, onClose })
         {/* Search Form */}
         <form onSubmit={handleSearch} className="px-6 py-4 border-b border-slate-100 flex-shrink-0">
           <label className="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-2">
-            Enter Booking ID or Phone Number
+            Enter Booking ID
           </label>
           <div className="flex space-x-2">
             <input
               type="text"
               value={bookingId}
               onChange={e => setBookingId(e.target.value)}
-              placeholder="e.g. TPT-2026-1234 or try '1234'"
+              placeholder="e.g. TPT-2026-XXXX"
               className="flex-1 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0066FF]/30 focus:border-[#0066FF]"
             />
             <button
@@ -130,7 +144,9 @@ export const TrackingModal: React.FC<TrackingModalProps> = ({ isOpen, onClose })
             <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
               <AlertTriangle className="w-12 h-12 text-amber-400 mb-3" />
               <p className="text-slate-800 font-bold">Booking Not Found</p>
-              <p className="text-slate-500 text-sm mt-2">We couldn't find a booking with ID <strong>"{bookingId}"</strong>. Please check and try again.</p>
+              <p className="text-slate-500 text-sm mt-2">
+                {error || `We couldn't find a booking with ID "${bookingId}". Please check and try again.`}
+              </p>
               <button
                 onClick={() => { setStatus('idle'); setBookingId(''); }}
                 className="mt-4 px-5 py-2 text-[#0066FF] border border-[#0066FF] rounded-xl text-sm font-bold hover:bg-sky-50 transition-colors"
@@ -146,10 +162,10 @@ export const TrackingModal: React.FC<TrackingModalProps> = ({ isOpen, onClose })
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs text-slate-500 font-medium">Booking ID</p>
-                  <p className="font-black text-slate-900 text-lg tracking-tight">{result.id}</p>
+                  <p className="font-black text-slate-900 text-lg tracking-tight">{result.trackingId}</p>
                 </div>
-                <span className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className={`inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-bold ring-1 ${statusTone(result.status)}`}>
+                  <span className="w-2 h-2 rounded-full bg-current animate-pulse" />
                   <span>{result.status}</span>
                 </span>
               </div>
@@ -158,19 +174,29 @@ export const TrackingModal: React.FC<TrackingModalProps> = ({ isOpen, onClose })
               <div className="grid grid-cols-2 gap-3">
                 <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
                   <p className="text-xs text-slate-500 mb-1 font-medium">Service</p>
-                  <p className="text-sm font-bold text-slate-900">{result.service}</p>
+                  <p className="text-sm font-bold text-slate-900">{result.serviceType}</p>
                 </div>
                 <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
                   <p className="text-xs text-slate-500 mb-1 font-medium">Date</p>
-                  <p className="text-sm font-bold text-slate-900">{result.date}</p>
+                  <p className="text-sm font-bold text-slate-900">{result.pickupDate}</p>
                 </div>
                 <div className="bg-blue-50 rounded-xl p-3 border border-blue-100 col-span-2">
                   <div className="flex items-center space-x-2">
                     <Truck className="w-4 h-4 text-[#0066FF]" />
                     <div>
                       <p className="text-xs text-slate-500 font-medium">Vehicle & Driver</p>
-                      <p className="text-sm font-bold text-slate-900">{result.vehicle}</p>
-                      <p className="text-xs text-slate-600">{result.driver} · <a href={`tel:${result.driverPhone}`} className="text-[#0066FF] font-semibold">{result.driverPhone}</a></p>
+                      <p className="text-sm font-bold text-slate-900">{result.vehicleType || 'To be assigned'}</p>
+                      <p className="text-xs text-slate-600">
+                        {result.passengers ? `${result.passengers} passenger(s)` : 'No passenger count'}
+                        {result.customerPhone && (
+                          <>
+                            {' · '}
+                            <a href={`tel:${result.customerPhone}`} className="text-[#0066FF] font-semibold">
+                              {result.customerPhone}
+                            </a>
+                          </>
+                        )}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -182,7 +208,7 @@ export const TrackingModal: React.FC<TrackingModalProps> = ({ isOpen, onClose })
                   <div className="w-3 h-3 rounded-full bg-emerald-500 mt-0.5 flex-shrink-0" />
                   <div>
                     <p className="text-xs text-slate-500">Pickup</p>
-                    <p className="text-sm font-semibold text-slate-800">{result.pickup}</p>
+                    <p className="text-sm font-semibold text-slate-800">{result.pickupLocation}</p>
                   </div>
                 </div>
                 <div className="ml-1.5 w-0.5 h-4 bg-slate-200" />
@@ -190,7 +216,7 @@ export const TrackingModal: React.FC<TrackingModalProps> = ({ isOpen, onClose })
                   <MapPin className="w-3 h-3 text-[#0066FF] mt-0.5 flex-shrink-0" />
                   <div>
                     <p className="text-xs text-slate-500">Drop-off</p>
-                    <p className="text-sm font-semibold text-slate-800">{result.dropoff}</p>
+                    <p className="text-sm font-semibold text-slate-800">{result.dropoffLocation}</p>
                   </div>
                 </div>
               </div>
@@ -199,8 +225,8 @@ export const TrackingModal: React.FC<TrackingModalProps> = ({ isOpen, onClose })
               <div className="bg-sky-50 border border-sky-200 rounded-xl px-4 py-3 flex items-center space-x-3">
                 <Clock className="w-5 h-5 text-[#0066FF] flex-shrink-0" />
                 <div>
-                  <p className="text-xs text-slate-500 font-medium">Estimated Arrival</p>
-                  <p className="text-lg font-black text-[#0066FF]">{result.estimatedArrival}</p>
+                  <p className="text-xs text-slate-500 font-medium">Scheduled Pickup Time</p>
+                  <p className="text-lg font-black text-[#0066FF]">{result.pickupTime}</p>
                 </div>
               </div>
 
@@ -208,14 +234,14 @@ export const TrackingModal: React.FC<TrackingModalProps> = ({ isOpen, onClose })
               <div>
                 <p className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-3">Journey Progress</p>
                 <div className="space-y-3">
-                  {result.steps.map((step, i) => (
-                    <div key={i} className="flex items-center space-x-3">
+                  {steps.map(step => (
+                    <div key={step.label} className="flex items-center space-x-3">
                       <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 border-2 ${
-                        step.done
-                          ? (step as any).active
-                            ? 'bg-[#0066FF] border-[#0066FF]'
-                            : 'bg-emerald-500 border-emerald-500'
-                          : 'bg-white border-slate-200'
+                        step.active
+                          ? 'bg-[#0066FF] border-[#0066FF]'
+                          : step.done
+                            ? 'bg-emerald-500 border-emerald-500'
+                            : 'bg-white border-slate-200'
                       }`}>
                         {step.done ? (
                           <CheckCircle className="w-4 h-4 text-white" />
@@ -233,6 +259,13 @@ export const TrackingModal: React.FC<TrackingModalProps> = ({ isOpen, onClose })
                   ))}
                 </div>
               </div>
+
+              {result.specialNotes && (
+                <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3">
+                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Notes</p>
+                  <p className="text-sm text-slate-700">{result.specialNotes}</p>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -240,3 +273,5 @@ export const TrackingModal: React.FC<TrackingModalProps> = ({ isOpen, onClose })
     </div>
   );
 };
+
+export default TrackingModal;

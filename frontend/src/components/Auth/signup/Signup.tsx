@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ArrowRight, CheckCircle2, Eye, EyeOff, Lock, Mail, Phone, User } from 'lucide-react';
 import { AuthLayout } from '../AuthLayout';
 import { GoogleIcon } from '../GoogleIcon';
+import api, { extractError, tokenStore } from '../../../lib/apiClient';
+import { useToast } from '../../common/ToastProvider';
 
 const inputBase =
   'w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 pl-10 pr-10 text-[13px] text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#0066FF] focus:bg-white focus:ring-4 focus:ring-[#0066FF]/10';
@@ -14,8 +17,53 @@ const labelBase = 'mb-1 block text-[11px] font-bold text-slate-700';
 const iconBase = 'pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400';
 
 export const Signup: React.FC = () => {
+const navigate = useNavigate();
+  const toast = useToast();
   const [showPassword, setShowPassword] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [name, setName] = useState('');
+  const [company, setCompany] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    try {
+      const res = await api.post<{ token: string; user: { name: string; email: string; role: string } }>(
+        '/auth/register',
+        {
+          name: name.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+          company: company.trim(),
+          password,
+        },
+      );
+
+      tokenStore.save(res.data.token);
+      tokenStore.saveUser(res.data.user);
+
+      if (res.data.user.role === 'admin') {
+        toast.success('Signed in', 'Opening the admin panel.');
+        navigate('/admin');
+        return;
+      }
+
+      toast.success('Account created', `Welcome aboard, ${res.data.user.name}.`);
+      navigate('/account');
+    } catch (err) {
+      const message = extractError(err, 'Could not create your account');
+      setError(message);
+      toast.error('Sign up failed', message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <AuthLayout
@@ -27,18 +75,7 @@ export const Signup: React.FC = () => {
       footerLinkLabel="Sign in"
       footerLinkTo="/login"
     >
-      {submitted ? (
-        <div className="py-6 text-center">
-          <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-emerald-50">
-            <CheckCircle2 className="h-7 w-7 text-emerald-500" aria-hidden="true" />
-          </div>
-          <h2 className="mt-4 text-xl font-bold tracking-tight text-[#0B1B33]">Account created</h2>
-          <p className="mt-1.5 text-sm text-[#475569]">
-            We&rsquo;ve sent a confirmation email. Your account manager will reach out shortly.
-          </p>
-        </div>
-      ) : (
-        <>
+<>
           <button
             type="button"
             className="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-800 transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
@@ -53,13 +90,13 @@ export const Signup: React.FC = () => {
             <span className="h-px flex-1 bg-slate-200" />
           </div>
 
-          <form
-            className="space-y-3"
-            onSubmit={event => {
-              event.preventDefault();
-              setSubmitted(true);
-            }}
-          >
+{error && (
+            <p className="mb-3 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-xs font-semibold text-rose-700">
+              {error}
+            </p>
+          )}
+
+          <form className="space-y-3" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
                 <label htmlFor="signup-name" className={labelBase}>
@@ -67,7 +104,7 @@ export const Signup: React.FC = () => {
                 </label>
                 <div className="relative">
                   <User className={iconBase} aria-hidden="true" />
-                  <input id="signup-name" type="text" required autoComplete="name" placeholder="Your name" className={inputBase} />
+                  <input id="signup-name" type="text" required autoComplete="name" value={name} onChange={e => setName(e.target.value)} placeholder="Your name" className={inputBase} />
                 </div>
               </div>
 
@@ -78,7 +115,9 @@ export const Signup: React.FC = () => {
                 <input
                   id="signup-company"
                   type="text"
-                  autoComplete="organization"
+autoComplete="organization"
+                  value={company}
+                  onChange={e => setCompany(e.target.value)}
                   placeholder="Organisation"
                   className={inputPlain}
                 />
@@ -95,7 +134,9 @@ export const Signup: React.FC = () => {
                   id="signup-email"
                   type="email"
                   required
-                  autoComplete="email"
+autoComplete="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
                   placeholder="you@company.com"
                   className={inputBase}
                 />
@@ -113,7 +154,9 @@ export const Signup: React.FC = () => {
                     id="signup-phone"
                     type="tel"
                     required
-                    autoComplete="tel"
+autoComplete="tel"
+                    value={phone}
+                    onChange={e => setPhone(e.target.value)}
                     placeholder="+974 5xxx xxxx"
                     className={inputBase}
                   />
@@ -130,7 +173,9 @@ export const Signup: React.FC = () => {
                     id="signup-password"
                     type={showPassword ? 'text' : 'password'}
                     required
-                    autoComplete="new-password"
+autoComplete="new-password"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
                     placeholder="Min. 8 characters"
                     className={inputBase}
                   />
@@ -155,16 +200,16 @@ export const Signup: React.FC = () => {
               </span>
             </label>
 
-            <button
+<button
               type="submit"
-              className="group flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#00A3FF] to-[#0055FF] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-[#0066FF]/25 transition hover:-translate-y-0.5 hover:shadow-xl"
+              disabled={loading}
+              className="group flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#00A3FF] to-[#0055FF] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-[#0066FF]/25 transition hover:-translate-y-0.5 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Create account
+              {loading ? 'Creating account…' : 'Create account'}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </button>
           </form>
         </>
-      )}
     </AuthLayout>
   );
 };

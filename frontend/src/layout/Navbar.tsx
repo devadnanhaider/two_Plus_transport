@@ -6,9 +6,11 @@ import {
   MessageCircle, ChevronDown, Award, Shield, Building2
 } from 'lucide-react';
 import { COMPANY_INFO, CONTACT_LINKS } from '../data/companyInfo';
+import { tokenStore } from '../lib/apiClient';
 
 interface NavbarProps {
   onOpenQuoteModal: (serviceType?: string) => void;
+  onOpenBookingModal: (serviceType?: string) => void;
   onOpenTrackingModal: () => void;
   onOpenAuthModal: () => void;
 }
@@ -48,11 +50,12 @@ function useDropdown() {
   return { open, setOpen, ref };
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onOpenTrackingModal, onOpenAuthModal }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onOpenBookingModal, onOpenTrackingModal, onOpenAuthModal }) => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const [mobileCompanyOpen, setMobileCompanyOpen] = useState(false);
+  const [signedInUser] = useState(() => tokenStore.user());
 
   // Home page keeps the header fixed so the hero video sits directly below it
   const isHome = location.pathname === '/';
@@ -117,12 +120,22 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onOpenTracking
               )}
             </div>
 
-            {/* Portal login */}
-            <button onClick={onOpenAuthModal}
-              className="flex items-center gap-1 sm:gap-1.5 text-[#0066FF] hover:text-white bg-sky-50 hover:bg-[#0066FF] p-1.5 sm:px-3 sm:py-1 rounded-md transition-all text-[11px] sm:text-xs border border-sky-200 font-semibold">
-              <User className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Login</span>
-            </button>
+            {/* Portal login / account */}
+            {signedInUser ? (
+              <Link
+                to={signedInUser.role === 'admin' ? '/admin' : '/account'}
+                className="flex items-center gap-1 sm:gap-1.5 bg-sky-50 text-[#0066FF] hover:bg-[#0066FF] hover:text-white p-1.5 sm:px-3 sm:py-1 rounded-md transition-all text-[11px] sm:text-xs border border-sky-200 font-semibold"
+              >
+                <User className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">{signedInUser.role === 'admin' ? 'Admin Panel' : 'My Account'}</span>
+              </Link>
+            ) : (
+              <button onClick={onOpenAuthModal}
+                className="flex items-center gap-1 sm:gap-1.5 text-[#0066FF] hover:text-white bg-sky-50 hover:bg-[#0066FF] p-1.5 sm:px-3 sm:py-1 rounded-md transition-all text-[11px] sm:text-xs border border-sky-200 font-semibold">
+                <User className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Login</span>
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -132,16 +145,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onOpenTracking
         <div className="flex items-center justify-between h-16 sm:h-18 gap-2 sm:gap-4">
 
           {/* Logo */}
-          <Link to="/" className="flex-shrink-0 group" onClick={closeAll}>
+          <Link to="/" className="group -ml-9 flex-shrink-0 sm:-ml-7 lg:-ml-7" onClick={closeAll}>
             <img
               src="/images/navbarlogo.png"
               alt="Two Plus Transport"
-              className="h-15 sm:h-20 w-auto object-contain group-hover:scale-105 transition-transform"
+              className="h-18 w-auto object-contain transition-transform group-hover:scale-105 sm:h-20"
             />
           </Link>
 
           {/* ── Desktop Nav ── */}
-          <nav className="hidden lg:flex items-center space-x-1 flex-1 justify-center">
+          <nav className="hidden flex-1 items-center justify-center space-x-1 lg:flex lg:pl-6">
 
             {/* Home */}
             <Link to="/"
@@ -249,7 +262,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onOpenTracking
               <Search className="w-4 h-4 text-[#0066FF]" />
               <span>Track</span>
             </button>
-            <button onClick={() => onOpenQuoteModal()}
+            <button onClick={() => onOpenBookingModal()}
               className="flex items-center space-x-2 bg-gradient-to-r from-[#00A3FF] to-[#0055FF] text-white hover:brightness-110 px-5 py-2.5 rounded-lg text-xs font-black shadow-md shadow-blue-500/20 transition-all hover:-translate-y-0.5">
               <span>BOOK NOW</span>
             </button>

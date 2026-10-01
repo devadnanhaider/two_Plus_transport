@@ -1,44 +1,19 @@
 import express from 'express';
-import { Quote } from '../models/Quote.js';
+import { createQuote, listQuotes, getQuote, respondToQuote, convertQuote } from '../controllers/quoteController.js';
+import { protect, authorize, optionalAuth } from '../middleware/auth.js';
+import validate from '../middleware/validate.js';
+import { quoteRules, quoteStatusRules } from '../validators/index.js';
 
 const router = express.Router();
-const mockQuotes = [];
 
-router.post('/', async (req, res) => {
-  try {
-    const trackingId = 'TRK-' + Math.floor(100000 + Math.random() * 900000);
-    const quoteData = { ...req.body, trackingId };
+// Public website users may request a quote without an account.
+router.post('/', optionalAuth, validate(quoteRules), createQuote);
+router.get('/:trackingId/track', optionalAuth, getQuote);
 
-    try {
-      const newQuote = new Quote(quoteData);
-      await newQuote.save();
-    } catch (dbErr) {
-      mockQuotes.push(quoteData);
-    }
-
-    res.status(201).json({
-      success: true,
-      message: 'Quote created successfully',
-      trackingId,
-      quote: quoteData
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
-
-router.get('/', async (req, res) => {
-  try {
-    let quotes = [];
-    try {
-      quotes = await Quote.find().sort({ createdAt: -1 });
-    } catch (dbErr) {
-      quotes = mockQuotes;
-    }
-    res.json({ success: true, count: quotes.length, quotes });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
+router.post('/', protect, validate(quoteRules), createQuote);
+router.get('/', protect, listQuotes);
+router.get('/:trackingId', protect, getQuote);
+router.patch('/:trackingId', protect, validate(quoteStatusRules), respondToQuote);
+router.post('/:trackingId/convert', protect, authorize('admin'), convertQuote);
 
 export default router;

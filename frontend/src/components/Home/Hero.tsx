@@ -11,6 +11,8 @@ interface HeroSegment {
   title: string;
   highlight: string;
   description: string;
+  /** Backend service enum this scene maps to, used to preselect the booking form */
+  service: string;
 }
 
 // Timings follow the montage: each of the six scenes runs 4s with a 0.7s crossfade,
@@ -21,6 +23,7 @@ const SEGMENTS: HeroSegment[] = [
     start: 0,
     title: 'Corporate &',
     highlight: 'Industrial Shuttles',
+    service: 'Staff Transportation',
     description:
       'Fixed-route employee shuttles, campus and industrial-site transport with climate-controlled coaches and uniformed professional drivers.',
   },
@@ -28,6 +31,7 @@ const SEGMENTS: HeroSegment[] = [
     start: 3.65,
     title: 'School',
     highlight: 'Transportation',
+    service: 'School Transportation',
     description:
       'Certified school buses with seatbelts, CCTV, female bus attendants and live parent notifications for a safe daily school run.',
   },
@@ -35,6 +39,7 @@ const SEGMENTS: HeroSegment[] = [
     start: 6.95,
     title: 'Airport Taxi &',
     highlight: 'VIP Transfers',
+    service: 'Airport Transportation',
     description:
       'Flight-monitored meet-and-greet arrivals, luggage assistance and executive sedans and luxury vans for terminals and hotels.',
   },
@@ -42,6 +47,7 @@ const SEGMENTS: HeroSegment[] = [
     start: 10.25,
     title: 'Hotel & Event',
     highlight: 'Valet Parking',
+    service: 'Valet Parking',
     description:
       'Uniformed, trained valet teams for hotels, restaurants and grand events with digital key tracking and full insurance cover.',
   },
@@ -49,6 +55,7 @@ const SEGMENTS: HeroSegment[] = [
     start: 13.55,
     title: 'Tour &',
     highlight: 'Sightseeing',
+    service: 'Tour Packages',
     description:
       'City tours, desert safari charters and group excursions with multilingual guides, refreshments and flexible itineraries.',
   },
@@ -56,6 +63,7 @@ const SEGMENTS: HeroSegment[] = [
     start: 16.85,
     title: '24/7 Towing &',
     highlight: 'Roadside Recovery',
+    service: 'Towing & Breakdown',
     description:
       'Hydraulic flatbed towing, jump starts, tyre changes and secure vehicle recovery on every highway and street in Qatar.',
   },
@@ -63,10 +71,11 @@ const SEGMENTS: HeroSegment[] = [
 
 interface HeroProps {
   onOpenQuoteModal?: (serviceType?: string) => void;
+  onOpenBookingModal?: (serviceType?: string) => void;
   onOpenTrackingModal?: () => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onOpenQuoteModal, onOpenTrackingModal }) => {
+export const Hero: React.FC<HeroProps> = ({ onOpenQuoteModal, onOpenBookingModal, onOpenTrackingModal }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const copyRef = useRef<HTMLDivElement>(null);
   const kickerRef = useRef<HTMLParagraphElement>(null);
@@ -251,7 +260,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenQuoteModal, onOpenTrackingModa
 
           <div ref={actionsRef} className="flex flex-wrap items-center gap-2 sm:gap-3 pt-2">
             <button
-              onClick={() => onOpenQuoteModal?.()}
+              onClick={() => (onOpenBookingModal ?? onOpenQuoteModal)?.(current.service)}
               className="inline-flex flex-1 sm:flex-none items-center justify-center gap-2 bg-gradient-to-r from-[#00A3FF] to-[#0055FF] text-white hover:brightness-110 px-3 sm:px-8 py-3 sm:py-4 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-wider sm:tracking-wider whitespace-nowrap shadow-2xl shadow-blue-900/40 transition-all hover:-translate-y-0.5"
             >
               <span>BOOK NOW</span>

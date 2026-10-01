@@ -1,10 +1,10 @@
 import React from 'react';
 
 interface TourListProps {
-  onOpenQuoteModal: (serviceType?: string) => void;
+  onOpenBookingModal: (serviceType?: string) => void;
 }
 
-export const TourList: React.FC<TourListProps> = ({ onOpenQuoteModal }) => {
+export const TourList: React.FC<TourListProps> = ({ onOpenBookingModal }) => {
   const packages = [
     {
       title: 'Doha Highlights & Cultural Tour',
@@ -54,7 +54,7 @@ export const TourList: React.FC<TourListProps> = ({ onOpenQuoteModal }) => {
               </div>
             </div>
             <div className="p-6 pt-0">
-              <button onClick={() => onOpenQuoteModal(pkg.title)} className="bg-gradient-to-r from-[#00A3FF] to-[#0055FF] text-white w-full py-2.5 rounded-xl text-xs font-bold shadow">
+              <button onClick={() => onOpenBookingModal('Tour Packages')} className="bg-gradient-to-r from-[#00A3FF] to-[#0055FF] text-white w-full py-2.5 rounded-xl text-xs font-bold shadow">
                 RESERVE TOUR
               </button>
             </div>

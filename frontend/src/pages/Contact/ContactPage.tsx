@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Phone, Mail, MapPin, Send, CheckCircle2, Clock } from 'lucide-react';
-import axios from 'axios';
+import api, { extractError } from '../../lib/apiClient';
+import { useToast } from '../../components/common/ToastProvider';
 import { COMPANY_INFO, CONTACT_LINKS } from '../../data/companyInfo';
 
 export const ContactPage: React.FC = () => {
+  const toast = useToast();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -11,16 +13,21 @@ export const ContactPage: React.FC = () => {
   const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
 
     try {
-      await axios.post('/api/contact', { name, email, phone, subject, message });
+      await api.post('/contact', { name, email, phone, subject, message });
       setSubmitted(true);
+      toast.success('Message sent', 'Our team will reply to your email shortly.');
     } catch (err) {
-      setSubmitted(true);
+      const message = extractError(err, 'Could not send your message. Please try again.');
+      setError(message);
+      toast.error('Message not sent', message);
     } finally {
       setLoading(false);
     }
@@ -101,6 +108,12 @@ export const ContactPage: React.FC = () => {
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <h3 className="text-xl font-bold text-slate-900 mb-2">Send Us a Direct Message</h3>
+
+                {error && (
+                  <p className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-xs font-semibold text-rose-700">
+                    {error}
+                  </p>
+                )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>

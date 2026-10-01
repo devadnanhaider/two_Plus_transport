@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { X, ChevronDown, Send, Phone, Mail, Calendar, Users, Car, CheckCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { X, ChevronDown, Send, Phone, Mail, Calendar, Users, Car, CheckCircle, MapPin, Loader2, AlertCircle } from 'lucide-react';
+import api, { extractError } from '../../lib/apiClient';
+import { useToast } from '../common/ToastProvider';
 
 interface QuoteModalProps {
   isOpen: boolean;
@@ -10,10 +13,10 @@ interface QuoteModalProps {
 const SERVICES = [
   'Staff Transportation',
   'School Transportation',
-  'Airport Taxi & VIP Transfers',
-  'Valet Parking Services',
-  'Tour & Sightseeing Packages',
-  'Towing & Roadside Assistance',
+  'Airport Transportation',
+  'Valet Parking',
+  'Tour Packages',
+  'Towing & Breakdown',
 ];
 
 const VEHICLE_TYPES = [
@@ -26,14 +29,21 @@ const VEHICLE_TYPES = [
 ];
 
 export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, initialService }) => {
+  const navigate = useNavigate();
+  const toast = useToast();
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [trackingId, setTrackingId] = useState('');
   const [form, setForm] = useState({
     service: initialService || '',
     vehicleType: '',
     passengers: '',
     date: '',
     duration: '',
+    pickup: '',
+    dropoff: '',
     name: '',
     phone: '',
     email: '',
@@ -48,6 +58,8 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, initial
     if (isOpen) {
       setStep(1);
       setSubmitted(false);
+      setError(null);
+      setTrackingId('');
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
@@ -61,9 +73,38 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, initial
     setForm(f => ({ ...f, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setError(null);
+    setLoading(true);
+
+    try {
+      const res = await api.post<{ quote: { trackingId: string } }>('/quotes', {
+        serviceType: form.service,
+        vehicleType: form.vehicleType || undefined,
+        passengers: form.passengers ? Number(form.passengers) : undefined,
+        pickupDate: form.date || undefined,
+        pickupTime: form.date ? '09:00' : undefined,
+        pickupLocation: form.pickup || form.notes.slice(0, 200) || 'Najma, Doha, Qatar',
+        dropoffLocation: form.dropoff || 'To be confirmed',
+        specialNotes: [form.duration && `Duration: ${form.duration}`, form.notes]
+          .filter(Boolean)
+          .join(' | '),
+        customerName: form.name,
+        customerPhone: form.phone,
+        customerEmail: form.email || undefined,
+      });
+
+      setTrackingId(res.data.quote?.trackingId || '');
+      setSubmitted(true);
+      toast.success('Quote request sent', `Reference ${res.data.quote?.trackingId || ''} — our dispatch team will respond shortly.`);
+    } catch (err) {
+      const message = extractError(err, 'Could not send your quote request. Please try again.');
+      setError(message);
+      toast.error('Quote request failed', message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -119,9 +160,21 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, initial
                 <CheckCircle className="w-10 h-10 text-emerald-500" />
               </div>
               <h3 className="text-2xl font-black text-slate-900 mb-2">Quote Request Sent!</h3>
-              <p className="text-slate-500 text-sm max-w-xs mb-6">
+              <p className="text-slate-500 text-sm max-w-xs mb-4">
                 Our dispatch team will contact you within <strong>30 minutes</strong> with a detailed proposal for <strong>{form.service || 'your service'}</strong>.
               </p>
+              {trackingId && (
+                <div className="mb-5 w-full max-w-xs rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+                  <p className="text-xs font-bold uppercase tracking-wider text-emerald-700">Your reference</p>
+                  <p className="mt-1 text-lg font-black text-emerald-800">{trackingId}</p>
+                  <button
+                    onClick={() => navigate('/')}
+                    className="mt-2 text-xs font-bold text-emerald-700 underline"
+                  >
+                    Track this request anytime
+                  </button>
+                </div>
+              )}
               <div className="space-y-2 text-left w-full max-w-xs bg-slate-50 rounded-xl p-4">
                 <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2">What happens next</p>
                 {['Team reviews your requirements', 'Custom proposal prepared', 'You receive quote via email/WhatsApp'].map((t, i) => (
@@ -140,8 +193,52 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, initial
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
+              {error && (
+                <div className="flex items-start gap-2 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-xs font-semibold text-rose-700">
+                  <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0" />
+                  <span>{error}</span>
+                </div>
+              )}
+
               {step === 1 && (
                 <>
+                  {/* Pickup & Dropoff */}
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1.5">
+                        Pickup Location <span className="text-red-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          name="pickup"
+                          value={form.pickup}
+                          onChange={handleChange}
+                          required
+                          placeholder="e.g. Najma, Doha"
+                          className="w-full border border-slate-200 rounded-xl px-4 py-3 pl-10 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0066FF]/30 focus:border-[#0066FF]"
+                        />
+                        <MapPin className="absolute left-3 top-3.5 w-4 h-4 text-slate-400" />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1.5">
+                        Destination
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          name="dropoff"
+                          value={form.dropoff}
+                          onChange={handleChange}
+                          placeholder="e.g. Hamad Int'l Airport"
+                          className="w-full border border-slate-200 rounded-xl px-4 py-3 pl-10 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0066FF]/30 focus:border-[#0066FF]"
+                        />
+                        <MapPin className="absolute left-3 top-3.5 w-4 h-4 text-slate-400" />
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Service Type */}
                   <div>
                     <label className="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1.5">
@@ -311,6 +408,8 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, initial
                       <div className="space-y-1">
                         {[
                           ['Service', form.service],
+                          form.pickup && ['Pickup', form.pickup],
+                          form.dropoff && ['Destination', form.dropoff],
                           form.vehicleType && ['Vehicle', form.vehicleType],
                           form.passengers && ['Passengers', form.passengers],
                           form.date && ['Date', new Date(form.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })],
@@ -342,9 +441,9 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, initial
 
                 {step === 1 ? (
                   <button
-                    type="button"
-                    onClick={() => { if (form.service) setStep(2); }}
-                    disabled={!form.service}
+                  type="button"
+                  onClick={() => { if (form.service && form.pickup) setStep(2); }}
+                  disabled={!form.service || !form.pickup}
                     className="px-6 py-2.5 bg-gradient-to-r from-[#0066FF] to-[#00A3FF] text-white rounded-xl font-black text-sm hover:brightness-110 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-md shadow-blue-500/20"
                   >
                     Continue →
@@ -352,10 +451,11 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, initial
                 ) : (
                   <button
                     type="submit"
-                    className="px-6 py-2.5 bg-gradient-to-r from-[#0066FF] to-[#00A3FF] text-white rounded-xl font-black text-sm hover:brightness-110 transition-all flex items-center space-x-2 shadow-md shadow-blue-500/20"
+                    disabled={loading}
+                    className="px-6 py-2.5 bg-gradient-to-r from-[#0066FF] to-[#00A3FF] text-white rounded-xl font-black text-sm hover:brightness-110 transition-all flex items-center space-x-2 shadow-md shadow-blue-500/20 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    <Send className="w-4 h-4" />
-                    <span>Send Quote Request</span>
+                    {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                    <span>{loading ? 'Sending…' : 'Send Quote Request'}</span>
                   </button>
                 )}
               </div>

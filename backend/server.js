@@ -1,55 +1,60 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 import { connectDB } from './config/db.js';
-import quoteRoutes from './routes/quoteRoutes.js';
-import bookingRoutes from './routes/bookingRoutes.js';
+import apiRoutes from './routes/index.js';
+import { notFound, errorHandler } from './middleware/errorHandler.js';
+import { userRepository } from './repositories/userRepository.js';
 
 dotenv.config();
+
+/** Creates a dispatcher account so the admin panel stays usable when Mongo is offline. */
+const ensureFallbackAdmin = async () => {
+  const email = process.env.ADMIN_EMAIL || 'admin@two-plus.qa';
+  const password = process.env.ADMIN_PASSWORD || 'TwoPlus@2026';
+
+  const existing = await userRepository.findByEmail(email);
+  if (existing) return;
+
+  await userRepository.create({
+    name: process.env.ADMIN_NAME || 'Dispatch Admin',
+    email,
+    password,
+    phone: process.env.COMPANY_PHONE || '+974 71030902',
+    company: 'Two Plus Transport',
+    role: 'admin',
+  });
+
+  console.log(`👤 Fallback admin ready → ${email} / ${password}`);
+};
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+app.use(cors({ origin: true, credentials: true }));
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.use('/api/quotes', quoteRoutes);
-app.use('/api/bookings', bookingRoutes);
+app.use('/api', apiRoutes);
 
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'Two Plus Transport & Towing Backend API Running 24/7' });
-});
+app.use(notFound);
+app.use(errorHandler);
 
-// Contact Route
-app.post('/api/contact', (req, res) => {
-  const { name, email, phone, subject, message } = req.body;
-  res.status(201).json({ success: true, message: 'Message received by dispatch team.' });
-});
+connectDB().then(async dbConnected => {
+  if (!dbConnected && process.env.NODE_ENV !== 'production') {
+    await ensureFallbackAdmin();
+  }
 
-// Auth Route
-app.post('/api/auth/login', (req, res) => {
-  const { email } = req.body;
-  res.json({
-    success: true,
-    token: 'jwt_mock_token_demand_2026',
-    user: { name: email.split('@')[0], email, role: 'client' }
-  });
-});
-
-app.post('/api/auth/register', (req, res) => {
-  const { name, email } = req.body;
-  res.json({
-    success: true,
-    token: 'jwt_mock_token_demand_2026',
-    user: { name, email, role: 'client' }
-  });
-});
-
-// Start Server
-connectDB().then(() => {
   app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`   Database: ${dbConnected ? `MongoDB (${mongoose.connection.host})` : 'in-memory fallback'}`);
+    console.log(
+      process.env.SMTP_HOST
+        ? `   Email: SMTP via ${process.env.SMTP_HOST}`
+        : '   Email: disabled (set SMTP_HOST / SMTP_USER / SMTP_PASS in .env to enable)',
+    );
   });
 });
+
+export default app;

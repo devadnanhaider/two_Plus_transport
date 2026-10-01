@@ -8,6 +8,7 @@ import {
 
 interface ServicesSectionProps {
   onOpenQuoteModal: (serviceType?: string) => void;
+  onOpenBookingModal: (serviceType?: string) => void;
 }
 
 const ICONS = {
@@ -19,7 +20,17 @@ const ICONS = {
   Truck,
 } as const;
 
-export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenQuoteModal }) => {
+export const SERVICE_ENUM_BY_ID: Record<string, string> = {
+  'staff-transportation': 'Staff Transportation',
+  'school-transportation': 'School Transportation',
+  'airport-taxi': 'Airport Transportation',
+  'airport-transportation': 'Airport Transportation',
+  'valet-parking': 'Valet Parking',
+  'tour-packages': 'Tour Packages',
+  'towing-breakdown': 'Towing & Breakdown',
+};
+
+export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenQuoteModal, onOpenBookingModal }) => {
   const getIcon = (iconName: string) => {
     const Icon = ICONS[iconName as keyof typeof ICONS] ?? Car;
     return <Icon className="w-6 h-6" />;
@@ -93,7 +104,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenQuoteMod
                 {/* Footer */}
                 <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-end">
                   <button
-                    onClick={() => onOpenQuoteModal(service.title)}
+                    onClick={() => onOpenBookingModal(SERVICE_ENUM_BY_ID[service.id])}
                     className="btn-blue-outline px-4 py-2.5 rounded-xl text-[11px] uppercase tracking-wider font-bold flex items-center gap-1.5 transition-all"
                   >
                     <span>Book Now</span>
