@@ -6,7 +6,7 @@ import { QuoteModal } from './components/QuoteModal/QuoteModal';
 import { TrackingModal } from './components/TrackingModal/TrackingModal';
 import { AuthModal } from './components/AuthModal/AuthModal';
 
-import { HomePage } from './pages/Home/HomePage';
+import { HomePage } from './pages/home/HomePage';
 import { ValetParkingPage } from './pages/ValetParking/ValetParkingPage';
 import { SchoolStaffPage } from './pages/SchoolStaff/SchoolStaffPage';
 import { AirportTaxiPage } from './pages/AirportTaxi/AirportTaxiPage';
