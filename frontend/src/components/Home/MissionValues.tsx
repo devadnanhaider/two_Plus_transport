@@ -4,10 +4,10 @@ import { Reveal, Stagger } from '../common';
 
 export const MissionValues: React.FC = () => {
   return (
-    <section className="py-20 bg-sky-50/60 border-y border-sky-100 relative">
+    <section className="py-7 bg-sky-50/60 border-y border-sky-100 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-<Reveal className="text-center max-w-4xl mx-auto mb-16 space-y-4">
+<Reveal className="text-center max-w-4xl mx-auto mb-8 space-y-4">
 
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
             Our Mission

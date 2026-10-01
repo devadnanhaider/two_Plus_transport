@@ -5,7 +5,7 @@ import { Reveal, Stagger } from '../common';
 
 export const LeadershipSection: React.FC = () => {
   return (
-    <section className="py-20 bg-white relative">
+    <section className="py-7 bg-white relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
 <Reveal className="text-center max-w-3xl mx-auto mb-16 space-y-3">

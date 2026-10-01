@@ -7,8 +7,8 @@ import {
   FleetShowcase,
   LeadershipSection,
 Testimonials,
-  CallToAction,
 } from '../../components/Home';
+import CallToAction from '../../components/Home/CallToAction';
 
 interface HomePageProps {
   onOpenQuoteModal: (serviceType?: string) => void;
@@ -40,6 +40,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenQuoteModal, onOpenTrac
       <Testimonials />
 
       {/* 8. Call-to-Action Banner */}
+{/* <CallToAction onOpenQuoteModal={() => onOpenQuoteModal()} /> */}
 <CallToAction onOpenQuoteModal={() => onOpenQuoteModal()} />
     </div>
   );

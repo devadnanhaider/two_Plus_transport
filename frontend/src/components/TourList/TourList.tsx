@@ -10,21 +10,18 @@ export const TourList: React.FC<TourListProps> = ({ onOpenQuoteModal }) => {
       title: 'Doha Highlights & Cultural Tour',
       duration: '4 Hours',
       highlights: ['Souq Waqif Old Market', 'Katara Cultural Village', 'The Pearl Qatar Island', 'Museum of Islamic Art Corniche'],
-      price: 'QAR 350 / Group',
       image: '/images/hero-fleet.jpg'
     },
     {
       title: 'Desert Safari & Inland Sea Excursion',
       duration: '6 Hours',
       highlights: ['Dune Bashing 4x4', 'Camel Riding Experience', 'Khor Al Adaid Inland Sea', 'Traditional Desert Camp'],
-      price: 'QAR 550 / Group',
       image: '/images/airport-transport.jpg'
     },
     {
       title: 'Full Day Qatar VIP Delegation Charter',
       duration: '10 Hours',
       highlights: ['Custom Itinerary', 'Multilingual Tour Chauffeur', 'Complimentary Refreshments', 'Luxury Executive Bus / SUV'],
-      price: 'QAR 950 / Day',
       image: '/images/school-staff.jpg'
     }
   ];
@@ -42,9 +39,8 @@ export const TourList: React.FC<TourListProps> = ({ onOpenQuoteModal }) => {
             <div>
               <img src={pkg.image} alt={pkg.title} className="w-full h-48 object-cover" />
               <div className="p-6 space-y-3">
-                <div className="flex justify-between items-center text-xs text-[#0066FF] font-bold">
+                <div className="flex items-center text-xs text-[#0066FF] font-bold">
                   <span>{pkg.duration}</span>
-                  <span>{pkg.price}</span>
                 </div>
                 <h3 className="text-lg font-bold text-slate-900">{pkg.title}</h3>
                 <ul className="space-y-1.5 text-xs text-slate-600">

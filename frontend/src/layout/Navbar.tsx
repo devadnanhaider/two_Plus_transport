@@ -134,9 +134,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onOpenTracking
           {/* Logo */}
           <Link to="/" className="flex-shrink-0 group" onClick={closeAll}>
             <img
-              src="/images/logo1.png"
+              src="/images/navbarlogo.png"
               alt="Two Plus Transportation"
-              className="h-8 sm:h-12 w-auto object-contain drop-shadow-[0_2px_6px_rgba(15,23,42,0.15)] group-hover:scale-105 transition-transform"
+              className="h-15 sm:h-20 w-auto object-contain group-hover:scale-105 transition-transform"
             />
           </Link>
 
@@ -256,12 +256,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onOpenTracking
           </div>
 
           {/* ── Mobile Hamburger ── */}
-          <div className="flex items-center gap-1.5 sm:gap-2 lg:hidden">
-            <button onClick={onOpenTrackingModal} aria-label="Track booking" className="p-1.5 sm:p-2 rounded-lg hover:bg-slate-100 transition-colors">
-              <Search className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-[#0066FF]" />
+          <div className="flex items-center gap-2 sm:gap-2.5 lg:hidden">
+            <button onClick={onOpenTrackingModal} aria-label="Track booking" className="p-2.5 sm:p-2 rounded-lg hover:bg-slate-100 transition-colors">
+              <Search className="w-6 h-6 sm:w-5 sm:h-5 text-[#0066FF]" />
             </button>
-            <button onClick={() => setMobileOpen(o => !o)} aria-label="Toggle menu" className="p-1.5 sm:p-2 rounded-lg hover:bg-sky-50 transition-colors">
-              {mobileOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6 text-[#0066FF]" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-slate-800" />}
+            <button onClick={() => setMobileOpen(o => !o)} aria-label="Toggle menu" className="p-2.5 sm:p-2 rounded-lg hover:bg-sky-50 transition-colors">
+              {mobileOpen ? <X className="w-7 h-7 sm:w-6 sm:h-6 text-[#0066FF]" /> : <Menu className="w-7 h-7 sm:w-6 sm:h-6 text-slate-800" />}
             </button>
           </div>
         </div>

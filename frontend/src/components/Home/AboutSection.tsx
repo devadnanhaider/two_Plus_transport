@@ -29,7 +29,7 @@ const DISPATCH = [
 
 export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenQuoteModal }) => {
   return (
-    <section className="bg-white py-20 sm:py-28">
+    <section className="bg-white py-10 sm:py-10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-start gap-14 lg:grid-cols-12 lg:gap-16">
 

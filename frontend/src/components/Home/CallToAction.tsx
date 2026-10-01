@@ -1,87 +1,70 @@
 import React from 'react';
-import { ArrowRight, MessageCircle, Clock3, FileText, Bus } from 'lucide-react';
+import { ArrowRight, PhoneCall } from 'lucide-react';
 import { COMPANY_INFO, CONTACT_LINKS } from '../../data/companyInfo';
-import { Reveal, TiltCard } from '../common';
+import { Reveal } from '../common';
 
 interface CallToActionProps {
   onOpenQuoteModal: () => void;
 }
 
-const TRUST_POINTS = [
-  { icon: Clock3, label: 'Response within 1 hour' },
-  { icon: FileText, label: 'No obligation quotes' },
-  { icon: Bus, label: 'Fleet options for every budget' },
-];
-
-export const CallToAction: React.FC<CallToActionProps> = ({ onOpenQuoteModal }) => {
+const CallToAction: React.FC<CallToActionProps> = ({ onOpenQuoteModal }) => {
   return (
-    <section className="py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center rounded-3xl border border-slate-200 bg-slate-50/60 p-8 sm:p-10">
-          <Reveal className="lg:col-span-7 space-y-5">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
-              Get in Touch
-            </h2>
+    <section className="relative overflow-hidden bg-white py-7 sm:py-10">
+      <Reveal className="relative mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="relative overflow-hidden rounded-[32px] bg-slate-950 px-7 py-14 text-center sm:px-14 sm:py-16">
+          <div
+            className="pointer-events-none absolute inset-0"
+            aria-hidden="true"
+            style={{
+              backgroundImage:
+                'radial-gradient(circle at 50% -20%, rgba(0,102,255,0.55), transparent 60%), radial-gradient(circle at 100% 110%, rgba(0,163,255,0.35), transparent 55%)',
+            }}
+          />
 
-            <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-xl">
-              Tell us your routes, headcount and schedule &mdash; our dispatch team replies with a
-              tailored, no-obligation proposal for staff commuting, VIP valet parking or
-              executive airport transfers anywhere in Qatar.
+          <div className="relative">
+            <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-[#00A3FF]">
+              Let&rsquo;s move you
             </p>
 
-            <ul className="flex flex-wrap gap-x-6 gap-y-2 pt-1">
-              {TRUST_POINTS.map(({ icon: Icon, label }) => (
-                <li key={label} className="flex items-center gap-2 text-xs font-semibold text-slate-600">
-                  <Icon className="w-4 h-4 text-[#0066FF] shrink-0" />
-                  {label}
-                </li>
-              ))}
-            </ul>
-          </Reveal>
+            <h2 className="mx-auto mt-4 max-w-xl text-3xl font-semibold leading-[1.1] tracking-[-0.03em] text-white sm:text-4xl lg:text-[2.75rem]">
+              Your next journey starts here
+            </h2>
 
-          {/* Booking card */}
-          <Reveal className="lg:col-span-5" delay={0.1}>
-            <TiltCard max={6} lift={8}>
-            <div className="rounded-2xl bg-white border border-slate-200 shadow-sm p-6 h-full">
-              <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-slate-500">
-                Start Your Booking
-              </p>
+            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <button
+                onClick={() => onOpenQuoteModal()}
+                className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-7 py-4 text-sm font-bold text-[#0B1B33] transition hover:-translate-y-0.5 hover:bg-[#00A3FF] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 sm:w-auto"
+              >
+                Get an instant quote
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              </button>
 
-              <div className="mt-4 space-y-3">
-                <button
-                  onClick={onOpenQuoteModal}
-                  className="w-full bg-[#0066FF] hover:bg-[#0055FF] text-white px-6 py-3.5 rounded-xl font-extrabold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2"
-                >
-                  <span>Get Instant Quote</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-
-                <a
-                  href={CONTACT_LINKS.whatsapp}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="w-full bg-[#25D366] hover:bg-[#1EBE5A] text-white px-6 py-3.5 rounded-xl font-extrabold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  <span>WhatsApp {COMPANY_INFO.whatsappDisplay}</span>
-                </a>
-              </div>
-
-              <p className="pt-4 text-[11px] text-slate-500">
-                or email{' '}
-                <a
-                  href={CONTACT_LINKS.mailto}
-                  className="font-bold text-[#0066FF] hover:underline underline-offset-2"
-                >
-                  {COMPANY_INFO.email}
-                </a>
-              </p>
+              <a
+                href={CONTACT_LINKS.whatsapp}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/25 px-7 py-4 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:border-[#25D366] hover:text-[#25D366] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] sm:w-auto"
+              >
+                <PhoneCall className="h-4 w-4" aria-hidden="true" />
+                WhatsApp us
+              </a>
             </div>
-            </TiltCard>
-          </Reveal>
 
+            <p className="mt-8 text-xs text-slate-400 sm:text-[13px]">
+              Or call{' '}
+              <a href={CONTACT_LINKS.telLandline} className="font-semibold text-slate-200 transition hover:text-[#00A3FF]">
+                {COMPANY_INFO.landlineDisplay}
+              </a>
+              {' · '}
+              <a href={CONTACT_LINKS.mailto} className="font-semibold text-slate-200 transition hover:text-[#00A3FF]">
+                {COMPANY_INFO.email}
+              </a>
+            </p>
+          </div>
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 };
+
+export default CallToAction;
