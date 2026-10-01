@@ -5,9 +5,8 @@ import { Footer } from './layout/Footer';
 import { QuoteModal } from './components/QuoteModal/QuoteModal';
 import { TrackingModal } from './components/TrackingModal/TrackingModal';
 import { AuthModal } from './components/AuthModal/AuthModal';
-import { FloatingWhatsApp } from './components/FloatingWhatsApp/FloatingWhatsApp';
 
-import { HomePage } from './pages/home/HomePage';
+import { HomePage } from './pages/Home/HomePage';
 import { ValetParkingPage } from './pages/ValetParking/ValetParkingPage';
 import { SchoolStaffPage } from './pages/SchoolStaff/SchoolStaffPage';
 import { AirportTaxiPage } from './pages/AirportTaxi/AirportTaxiPage';
@@ -33,7 +32,7 @@ export function App() {
   return (
     <Router>
       <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans selection:bg-sky-100 selection:text-[#0066FF]">
-        
+
         {/* Navigation Bar */}
         <Navbar
           onOpenQuoteModal={handleOpenQuoteModal}
@@ -63,9 +62,6 @@ export function App() {
           onOpenQuoteModal={handleOpenQuoteModal}
           onOpenTrackingModal={() => setIsTrackingModalOpen(true)}
         />
-
-        {/* Floating WhatsApp */}
-        <FloatingWhatsApp />
 
         {/* Dynamic Modals */}
         <QuoteModal
