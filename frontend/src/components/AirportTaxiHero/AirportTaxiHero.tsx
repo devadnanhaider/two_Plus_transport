@@ -9,7 +9,7 @@ export const AirportTaxiHero: React.FC<AirportTaxiHeroProps> = ({ onOpenQuoteMod
   return (
     <div className="relative py-24 bg-slate-950 text-white overflow-hidden">
       <img 
-        src="/images/airport-transport.jpg" 
+        src="/images/hero-slides/slide-airport-vip.jpg" 
         alt="Airport Taxi Qatar" 
         className="absolute inset-0 w-full h-full object-cover object-center opacity-30"
       />

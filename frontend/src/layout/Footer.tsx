@@ -58,16 +58,16 @@ export const Footer: React.FC<FooterProps> = ({ onOpenTrackingModal }) => {
 
           {/* Brand Info */}
           <div className="lg:col-span-4 space-y-4">
-            <Link to="/" className="inline-block bg-slate-950/60 rounded-xl px-4 py-3 border border-slate-800">
+            <Link to="/" className="inline-block  px-4 py-3 -mt-8">
               <img
-                src="/images/logo1.png"
-                alt="Two Plus Transportation"
+                src="/images/logo1-light.png"
+                alt="Two Plus Transport"
                 className="h-20 lg:h-24 w-auto object-contain"
               />
             </Link>
 
             <p className="text-xs text-slate-400 leading-relaxed font-light">
-              Two Plus Transportation is Qatar&rsquo;s premier transportation provider specializing in
+              Two Plus Transport is Qatar&rsquo;s premier transportation provider specializing in
               staff shuttles, school transit, airport transfers, valet parking management, tour packages, and
               emergency roadside towing.
             </p>

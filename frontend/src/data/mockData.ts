@@ -47,7 +47,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     id: 'staff-transportation',
     title: 'Staff Transportation',
     shortDesc: 'Reliable, scheduled daily corporate & industrial employee shuttle solutions.',
-    description: 'Demand Transport provides cost-effective, punctual corporate commuting services. We ensure your workforce arrives safely and comfortably on site, with dedicated routes, GPS fleet tracking, and climate-controlled luxury coaches.',
+    description: 'Two Plus Transport provides cost-effective, punctual corporate commuting services. We ensure your workforce arrives safely and comfortably on site, with dedicated routes, GPS fleet tracking, and climate-controlled luxury coaches.',
     image: '/images/hero-slides/slide-staff-transport.jpg',
     features: ['Fixed Route Schedules', 'GPS Live Tracking', 'AC Luxury Buses', 'Professional Uniformed Drivers', '24/7 Dispatch Control'],
     iconName: 'Users',
@@ -112,7 +112,7 @@ export const FLEET_DATA: Vehicle[] = [
     category: 'Bus',
     capacity: '50 Passengers',
     features: ['Reclining Leather Seats', 'High-Speed Wi-Fi', 'Onboard Entertainment', 'Climate Control'],
-    image: '/images/school-staff.jpg',
+    image: '/images/fleet/executive-coach.jpg',
     ratePerHour: 'QAR 350 / Hr'
   },
   {
@@ -121,7 +121,7 @@ export const FLEET_DATA: Vehicle[] = [
     category: 'Van',
     capacity: '7 Passengers',
     features: ['VIP Conference Seating', 'Ambient Lighting', 'Privacy Glass', 'Refreshment Bar'],
-    image: '/images/airport-transport.jpg',
+    image: '/images/fleet/vip-van.jpg',
     ratePerHour: 'QAR 180 / Hr'
   },
   {
@@ -130,7 +130,7 @@ export const FLEET_DATA: Vehicle[] = [
     category: 'Luxury Sedan',
     capacity: '6 Passengers',
     features: ['Bose Surround Audio', 'Panoramic Sunroof', 'Chauffeur Service', 'Full Leather Interior'],
-    image: '/images/airport-transport.jpg',
+    image: '/images/fleet/escalade-suv.jpg',
     ratePerHour: 'QAR 220 / Hr'
   },
   {
@@ -139,7 +139,7 @@ export const FLEET_DATA: Vehicle[] = [
     category: 'Bus',
     capacity: '22 Passengers',
     features: ['Spacious Luggage Bay', 'Dual AC Compressors', 'Tinted Windows', 'Automated Side Door'],
-    image: '/images/hero-fleet.jpg',
+    image: '/images/fleet/commuter-shuttle.jpg',
     ratePerHour: 'QAR 150 / Hr'
   },
   {
@@ -148,7 +148,7 @@ export const FLEET_DATA: Vehicle[] = [
     category: 'Tow Truck',
     capacity: 'Up to 5 Tons',
     features: ['Full Tilt Hydraulics', 'Soft-Strap Tie Down', 'Winch Assistance', 'GPS Navigation'],
-    image: '/images/towing-service.jpg',
+    image: '/images/fleet/flatbed-tow.jpg',
     ratePerHour: 'QAR 120 / Trip'
   }
 ];
@@ -159,7 +159,7 @@ export const TESTIMONIALS_DATA: Testimonial[] = [
     name: 'Sheikh Hamad Al-Thani',
     role: 'Event Director',
     company: 'Doha International Summit',
-    comment: 'Demand Transport managed our VIP valet parking and delegation shuttles flawlessly. Their drivers were punctual, polite, and handled over 400 executive vehicles with zero hassle.',
+    comment: 'Two Plus Transport managed our VIP valet parking and delegation shuttles flawlessly. Their drivers were punctual, polite, and handled over 400 executive vehicles with zero hassle.',
     rating: 5,
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80'
   },
@@ -168,7 +168,7 @@ export const TESTIMONIALS_DATA: Testimonial[] = [
     name: 'Sarah Jenkins',
     role: 'HR & Facilities Head',
     company: 'Global Energy Qatar',
-    comment: 'We have been using Demand Transport for our daily staff transportation for over 2 years. Their buses are immaculate and on-time every single morning.',
+    comment: 'We have been using Two Plus Transport for our daily staff transportation for over 2 years. Their buses are immaculate and on-time every single morning.',
     rating: 5,
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80'
   },
@@ -177,9 +177,36 @@ export const TESTIMONIALS_DATA: Testimonial[] = [
     name: 'Mohammed Al-Kuwari',
     role: 'Operations Director',
     company: 'St. Regis Resort',
-    comment: 'The valet parking crew provided by Demand Transport is top notch. Premium service quality that perfectly matches our 5-star hotel reputation.',
+    comment: 'The valet parking crew provided by Two Plus Transport is top notch. Premium service quality that perfectly matches our 5-star hotel reputation.',
     rating: 5,
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 't4',
+    name: 'Aisha Al-Mansouri',
+    role: 'Procurement Manager',
+    company: 'Qatar Petroleum Facilities',
+    comment: 'Their airport transfers are the most reliable we have used. Drivers wait with name boards, monitor our flights, and always arrive early.',
+    rating: 5,
+    avatar: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=150&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 't5',
+    name: 'James Whitfield',
+    role: 'School Transport Supervisor',
+    company: 'Dover International School',
+    comment: 'Student safety is their priority. GPS tracking, attendant on every bus and clear updates to parents — exactly what we needed.',
+    rating: 5,
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 't6',
+    name: 'Omar Al-Nuaimi',
+    role: 'Logistics Coordinator',
+    company: 'Aspire Zone Construction',
+    comment: 'A roadside breakdown at 2am was handled in under 40 minutes. Their flatbed crew secured our machinery professionally. Faultless support.',
+    rating: 5,
+    avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&auto=format&fit=crop&q=80'
   }
 ];
 

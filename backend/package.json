@@ -1,7 +1,7 @@
 {
   "name": "demand-transport-backend",
   "version": "1.0.0",
-  "description": "Backend API for Demand Transport & Towing Services (Node Express MongoDB)",
+  "description": "Backend API for Two Plus Transport & Towing Services (Node Express MongoDB)",
   "main": "server.js",
   "type": "module",
   "scripts": {

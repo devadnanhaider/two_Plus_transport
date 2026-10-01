@@ -19,7 +19,7 @@ app.use('/api/quotes', quoteRoutes);
 app.use('/api/bookings', bookingRoutes);
 
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'Demand Transport & Towing Backend API Running 24/7' });
+  res.json({ status: 'OK', message: 'Two Plus Transport & Towing Backend API Running 24/7' });
 });
 
 // Contact Route

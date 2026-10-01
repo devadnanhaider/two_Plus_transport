@@ -40,7 +40,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenQuoteModal }) 
             </h2>
 
             <p className="mt-6 max-w-xl text-base leading-relaxed text-[#475569] sm:text-lg">
-              <span className="font-semibold text-[#0B1B33]">Two Plus Transportation</span> moves
+              <span className="font-semibold text-[#0B1B33]">Two Plus Transport</span> moves
               Qatar&rsquo;s employees, students and guests. Staff shuttles, school runs, airport
               transfers, valet, tours and 24/7 towing, all from one licensed fleet.
             </p>
@@ -84,7 +84,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenQuoteModal }) 
             <div className="relative overflow-hidden rounded-[2rem] [perspective:1100px]">
               <img
                 src="/images/about-fleet.jpg"
-                alt="Two Plus Transportation executive fleet in Qatar"
+                alt="Two Plus Transport executive fleet in Qatar"
                 className="h-[520px] w-full object-cover sm:h-[600px] transition-transform duration-700 hover:scale-[1.03]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0B1B33]/60 via-transparent to-transparent" />

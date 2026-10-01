@@ -1,6 +1,6 @@
 export const COMPANY_INFO = {
-  name: 'Two Plus Transportation',
-  legalName: 'Two Plus Transportation',
+  name: 'Two Plus Transport',
+  legalName: 'Two Plus Transport',
   email: 'twopluslimo@gmail.com',
   landline: '55110121',
   landlineDisplay: '+974 5511 0121',

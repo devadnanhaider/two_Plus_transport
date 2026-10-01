@@ -135,7 +135,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onOpenTracking
           <Link to="/" className="flex-shrink-0 group" onClick={closeAll}>
             <img
               src="/images/navbarlogo.png"
-              alt="Two Plus Transportation"
+              alt="Two Plus Transport"
               className="h-15 sm:h-20 w-auto object-contain group-hover:scale-105 transition-transform"
             />
           </Link>

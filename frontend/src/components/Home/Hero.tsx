@@ -204,7 +204,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenQuoteModal, onOpenTrackingModa
         ref={videoRef}
         src={HERO_VIDEO}
         poster={HERO_POSTER}
-        aria-label="Two Plus Transportation fleet serving staff shuttles, school transport, airport transfers, valet parking, tours and towing"
+        aria-label="Two Plus Transport fleet serving staff shuttles, school transport, airport transfers, valet parking, tours and towing"
         className="absolute inset-0 w-full h-full object-cover object-center"
         autoPlay
         muted
@@ -230,7 +230,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenQuoteModal, onOpenTrackingModa
             ref={kickerRef}
             className="text-[11px] sm:text-sm font-extrabold uppercase tracking-[0.2em] sm:tracking-[0.25em] text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.8)]"
           >
-            Two Plus Transportation
+            Two Plus Transport
           </p>
 
           <div>

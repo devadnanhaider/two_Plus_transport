@@ -27,7 +27,7 @@ export const AirportTaxiDetails: React.FC = () => {
 
         <div className="lg:col-span-5">
           <div className="rounded-3xl overflow-hidden shadow-2xl border-4 border-slate-100">
-            <img src="/images/airport-transport.jpg" alt="Chauffeur Airport" className="w-full h-80 object-cover" />
+            <img src="/images/hero-slides/slide-airport-vip.jpg" alt="Chauffeur Airport" className="w-full h-80 object-cover" />
           </div>
         </div>
       </div>
