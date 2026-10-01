@@ -9,13 +9,36 @@ import { userRepository } from './repositories/userRepository.js';
 
 dotenv.config();
 
-/** Creates a dispatcher account so the admin panel stays usable when Mongo is offline. */
-const ensureFallbackAdmin = async () => {
-  const email = process.env.ADMIN_EMAIL || 'admin@two-plus.qa';
-  const password = process.env.ADMIN_PASSWORD || 'TwoPlus@2026';
+/**
+ * Idempotently makes sure the dispatch admin exists with the configured credentials.
+ * Safe to run on every boot (Vercel serverless re-runs it on each cold start).
+ */
+const ensureAdminAccount = async () => {
+  const email = (process.env.ADMIN_EMAIL || '').trim().toLowerCase();
+  const password = process.env.ADMIN_PASSWORD || 'admin12';
+  if (!email) return;
 
   const existing = await userRepository.findByEmail(email);
-  if (existing) return;
+
+  if (existing) {
+    // Leaves the stored admin untouched — only fixes role/password when they actually drift.
+    let changed = false;
+
+    if (existing.role !== 'admin') {
+      await userRepository.updateById(existing.id, { role: 'admin' });
+      changed = true;
+      console.log(`🛡️  Promoted ${email} to admin`);
+    }
+
+    if (!(await existing.comparePassword(password))) {
+      await userRepository.updatePassword(existing.id, password);
+      changed = true;
+      console.log(`🔑 Updated admin password for ${email}`);
+    }
+
+    if (changed) console.log(`👤 Admin account verified → ${email}`);
+    return;
+  }
 
   await userRepository.create({
     name: process.env.ADMIN_NAME || 'Dispatch Admin',
@@ -26,7 +49,7 @@ const ensureFallbackAdmin = async () => {
     role: 'admin',
   });
 
-  console.log(`👤 Fallback admin ready → ${email} / ${password}`);
+  console.log(`👤 Admin account ready → ${email}`);
 };
 
 const app = express();
@@ -42,8 +65,14 @@ app.use(notFound);
 app.use(errorHandler);
 
 connectDB().then(async dbConnected => {
-  if (!dbConnected && process.env.NODE_ENV !== 'production') {
-    await ensureFallbackAdmin();
+  try {
+    await ensureAdminAccount();
+  } catch (error) {
+    console.error('⚠️  Could not prepare admin account:', error.message);
+  }
+
+  if (!dbConnected && process.env.NODE_ENV !== 'production' && !process.env.ADMIN_EMAIL) {
+    console.warn('⚠️  Running without a database — data will reset on restart');
   }
 
   app.listen(PORT, () => {
