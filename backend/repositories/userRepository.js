@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { isDbReady } from '../config/db.js';
+import { isDbReady, waitForDb } from '../config/db.js';
 import { User } from '../models/User.js';
 
 const memoryUsers = [];
@@ -21,6 +21,7 @@ const shape = doc => ({
 export const userRepository = {
   /** Creates a user in Mongo, falling back to memory when the DB is offline. */
   async create({ name, email, password, phone = '', company = '', role = 'user' }) {
+    await waitForDb();
     const normalisedEmail = String(email).toLowerCase();
 
     if (isDbReady()) {
@@ -51,6 +52,7 @@ export const userRepository = {
   },
 
   async findByEmail(email) {
+    await waitForDb();
     const normalisedEmail = String(email).toLowerCase();
 
     if (isDbReady()) {
@@ -98,6 +100,7 @@ export const userRepository = {
   },
 
   async findById(id) {
+    await waitForDb();
     if (isDbReady()) {
       if (!mongoose.Types.ObjectId.isValid(id)) return null;
       const user = await User.findById(id);
@@ -109,6 +112,7 @@ export const userRepository = {
   },
 
   async findAll() {
+    await waitForDb();
     if (isDbReady()) {
       const users = await User.find().sort({ createdAt: -1 });
       return users.map(shape);
@@ -117,6 +121,7 @@ export const userRepository = {
   },
 
   async updateById(id, updates) {
+    await waitForDb();
     const allowed = {};
     ['name', 'phone', 'company'].forEach(key => {
       if (updates[key] !== undefined) allowed[key] = updates[key];
@@ -135,6 +140,7 @@ export const userRepository = {
 
   /** Stores a short-lived password reset token for a user. */
   async setResetToken(id, token, expiresAt) {
+    await waitForDb();
     const fields = { resetPasswordToken: token ?? null, resetPasswordExpires: expiresAt ?? null };
 
     if (isDbReady()) {
@@ -152,6 +158,7 @@ export const userRepository = {
   /** Looks up a user by their reset token so the password can be replaced. */
   async findByResetToken(token) {
     if (!token) return null;
+    await waitForDb();
 
     if (isDbReady()) {
       const user = await User.findOne({ resetPasswordToken: token }).select('+resetPasswordToken +resetPasswordExpires');
@@ -165,6 +172,7 @@ export const userRepository = {
   },
 
   async updatePassword(id, newPassword) {
+    await waitForDb();
     if (isDbReady()) {
       const user = await User.findById(id).select('+password');
       if (!user) return null;

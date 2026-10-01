@@ -31,7 +31,11 @@ api.interceptors.request.use(config => {
 api.interceptors.response.use(
   response => response,
   error => {
-    if (error.response?.status === 401) {
+    // A failed credential check is not a session expiry — wiping the stored token
+    // there would sign the user out instead of showing the login error.
+    const url = error.config?.url ?? '';
+    const isCredentialCheck = /\/auth\/(login|register)/.test(url);
+    if (error.response?.status === 401 && !isCredentialCheck) {
       tokenStore.clear();
       const onAdminLogin = window.location.pathname.startsWith('/admin/login');
       const insideAdmin = window.location.pathname.startsWith('/admin');
