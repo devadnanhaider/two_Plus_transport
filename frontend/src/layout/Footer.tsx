@@ -58,11 +58,11 @@ export const Footer: React.FC<FooterProps> = ({ onOpenTrackingModal }) => {
 
           {/* Brand Info */}
           <div className="lg:col-span-4 space-y-4">
-            <Link to="/" className="inline-block  px-4 py-3 -mt-8">
+            <Link to="/" className="inline-block  -mt-6 ">
               <img
-                src="/images/logo1-light.png"
+                src="/images/footerlogo.png"
                 alt="Two Plus Transport"
-                className="h-20 lg:h-24 w-auto object-contain"
+                className="h-20 lg:h-20 w-auto object-contain  hover:opacity-80"
               />
             </Link>
 

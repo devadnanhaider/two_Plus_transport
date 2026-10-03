@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { Navbar } from './layout/Navbar';
 import { Footer } from './layout/Footer';
 import { QuoteModal } from './components/QuoteModal/QuoteModal';
@@ -30,7 +30,6 @@ import { Dashboard } from './pages/admin/Dashboard';
 import { BookingsPage } from './pages/admin/BookingsPage';
 import { QuotesPage } from './pages/admin/QuotesPage';
 import { UsersPage } from './pages/admin/UsersPage';
-import { AdminLogin } from './pages/admin/AdminLogin';
 import { FleetPage as AdminFleetPage } from './pages/admin/FleetPage';
 import { BlogsPage as AdminBlogsPage } from './pages/admin/BlogsPage';
 import { SettingsPage } from './pages/admin/SettingsPage';
@@ -84,7 +83,7 @@ function AppShell() {
     return (
       <div className="min-h-screen bg-[#F5F8FF] text-slate-900">
         <Routes>
-          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/login" element={<Navigate to="/login" replace />} />
           <Route
             path="/admin"
             element={

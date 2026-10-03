@@ -5,18 +5,40 @@ export const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/a
 const TOKEN_KEY = 'tpt_admin_token';
 const USER_KEY = 'tpt_admin_user';
 
+type AuthStorage = 'local' | 'session';
+
+const stores: Record<AuthStorage, Storage> = {
+  local: window.localStorage,
+  session: window.sessionStorage,
+};
+
+const write = (store: AuthStorage, key: string, value: string) => {
+  const target = stores[store];
+  target.setItem(key, value);
+  const other = store === 'local' ? stores.session : stores.local;
+  other.removeItem(key);
+};
+
+const read = (key: string) => stores.local.getItem(key) ?? stores.session.getItem(key);
+
+const drop = (key: string) => {
+  stores.local.removeItem(key);
+  stores.session.removeItem(key);
+};
+
 export const tokenStore = {
-  get: () => localStorage.getItem(TOKEN_KEY),
-  save: (token: string) => localStorage.setItem(TOKEN_KEY, token),
+  get: () => read(TOKEN_KEY),
+  /** Remembered sessions persist in localStorage; otherwise they die with the tab. */
+  save: (token: string, remember = true) => write(remember ? 'local' : 'session', TOKEN_KEY, token),
   user: () => {
-    const raw = localStorage.getItem(USER_KEY);
+    const raw = read(USER_KEY);
     return raw ? (JSON.parse(raw) as { name: string; email: string; role: string }) : null;
   },
-  saveUser: (user: { name: string; email: string; role: string }) =>
-    localStorage.setItem(USER_KEY, JSON.stringify(user)),
+  saveUser: (user: { name: string; email: string; role: string }, remember = true) =>
+    write(remember ? 'local' : 'session', USER_KEY, JSON.stringify(user)),
   clear: () => {
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
+    drop(TOKEN_KEY);
+    drop(USER_KEY);
   },
 };
 
@@ -37,10 +59,9 @@ api.interceptors.response.use(
     const isCredentialCheck = /\/auth\/(login|register)/.test(url);
     if (error.response?.status === 401 && !isCredentialCheck) {
       tokenStore.clear();
-      const onAdminLogin = window.location.pathname.startsWith('/admin/login');
-      const insideAdmin = window.location.pathname.startsWith('/admin');
-      if (insideAdmin && !onAdminLogin) {
-        window.location.href = '/admin/login';
+      const onLogin = window.location.pathname === '/login';
+      if (window.location.pathname.startsWith('/admin') && !onLogin) {
+        window.location.href = '/login';
       }
     }
     return Promise.reject(error);

@@ -8,7 +8,7 @@ interface AboutSectionProps {
 }
 
 const STATS = [
-  { value: '500+', label: 'Modern vehicles' },
+  { value: '50+', label: 'Modern vehicles' },
   { value: '100K+', label: 'Happy passengers' },
   { value: '99.8%', label: 'On-time arrival' },
 ];
